@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WeBee\gCMS\Content;
 
-use Parsedown;
+use League\CommonMark\CommonMarkConverter as MdParser;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Finder\SplFileInfo;
@@ -59,7 +59,7 @@ class PageFile extends AbstractContent
      */
     public function __construct(
         SplFileInfo $fileInfo,
-        Parsedown $mdParser,
+        MdParser $mdParser,
         Processor $configProcessor,
         ConfigurationInterface $pageConfigDefinition
     ) {
@@ -137,7 +137,7 @@ class PageFile extends AbstractContent
             return;
         }
 
-        $this->content = $this->mdParser->text($toParseContent);
+        $this->content = $this->mdParser->convertToHtml($toParseContent);
     }
 
     /**

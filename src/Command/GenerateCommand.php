@@ -6,7 +6,7 @@ namespace WeBee\gCMS\Command;
 
 use DomainException;
 use IteratorAggregate;
-use Parsedown;
+use League\CommonMark\CommonMarkConverter as MdParser;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,7 +45,7 @@ class GenerateCommand extends Command
                 'pageFileConfig' => new PageFileConfig(),
                 'commandConfig' => new GenerateCommandConfig(),
             ],
-            'mdParser' => new Parsedown(),
+            'mdParser' => new MdParser(),
             'fs' => new Filesystem(),
         ];
     }
