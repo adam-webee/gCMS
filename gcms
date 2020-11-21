@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+namespace WeBee\gCMS;
+
+require __DIR__ . '/vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use WeBee\gCMS\Command\GenerateCommand;
+
+$app = new Application();
+
+$app->add(
+    new GenerateCommand()
+);
+
+$app->run();
+
+__halt_compiler();
