@@ -48,7 +48,6 @@ class GenerateCommand extends Command
             'mdParser' => new Parsedown(),
             'fs' => new Filesystem(),
         ];
-
     }
 
     /**

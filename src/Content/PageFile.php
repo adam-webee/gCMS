@@ -62,8 +62,7 @@ class PageFile extends AbstractContent
         Parsedown $mdParser,
         Processor $configProcessor,
         ConfigurationInterface $pageConfigDefinition
-    )
-    {
+    ) {
         $this->fileInfo = $fileInfo;
         $this->mdParser = $mdParser;
         $this->configProcessor = $configProcessor;
@@ -110,11 +109,15 @@ class PageFile extends AbstractContent
     {
         $toParseAttributes = $this->findContent(self::PAGE_PATTERN_ATTRIBUTES);
 
-        if (null === $toParseAttributes) return;
+        if (null === $toParseAttributes) {
+            return;
+        }
 
         $toParseAttributes = json_decode($toParseAttributes, true);
 
-        if (null === $toParseAttributes) return;
+        if (null === $toParseAttributes) {
+            return;
+        }
 
         $this->attributes = $this->configProcessor->processConfiguration(
             $this->pageConfigDefinition,
@@ -130,7 +133,9 @@ class PageFile extends AbstractContent
     {
         $toParseContent = $this->findContent(self::PAGE_PATTERN_CONTENT);
 
-        if (null === $toParseContent) return;
+        if (null === $toParseContent) {
+            return;
+        }
 
         $this->content = $this->mdParser->text($toParseContent);
     }
