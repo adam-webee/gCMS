@@ -10,6 +10,8 @@ interface ContentInterface
     public const SLUG = 'slug';
     public const TAGS = 'tags';
     public const CATEGORIES = 'categories';
+    public const EXCERPT = 'excerpt';
+    public const AUTHOR = 'author';
 
     /**
      * Returns associative array of contents' attributes like title, slug, author etc.
@@ -25,6 +27,20 @@ interface ContentInterface
      * @return null|string
      */
     public function title(): ?string;
+
+     /**
+     * Returns contents' excerpt.
+     *
+     * @return null|string
+     */
+    public function excerpt(): ?string;
+
+    /**
+     * Returns contents' author.
+     *
+     * @return null|string
+     */
+    public function author(): ?string;
 
     /**
      * Returns contents' slug.

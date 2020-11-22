@@ -50,6 +50,25 @@ abstract class AbstractContent implements ContentInterface
     /**
      * @inheritDoc
      */
+    public function excerpt(): ?string
+    {
+        return $this->attributes[ContentInterface::EXCERPT];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function author(): ?string
+    {
+        return array_key_exists(ContentInterface::AUTHOR, $this->attributes)
+            ? $this->attributes[ContentInterface::AUTHOR]
+            : null
+        ;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function slug(): string
     {
         return $this->attributes[ContentInterface::SLUG];

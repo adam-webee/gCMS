@@ -124,6 +124,8 @@ class PageFile extends AbstractContent
             // order of arrays matters, as we need to apply parsed attributes onto default one
             [$this->attributes, $toParseAttributes]
         );
+
+        $this->attributes['excerpt'] = $this->mdParser->convertToHtml($this->attributes['excerpt']);
     }
 
     /**
