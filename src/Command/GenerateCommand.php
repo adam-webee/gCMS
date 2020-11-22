@@ -14,6 +14,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Twig\Environment as TwigEnvironment;
+use Twig\Loader\FilesystemLoader as TwigLoader;
 use WeBee\gCMS\Config\GenerateCommandConfig;
 use WeBee\gCMS\Config\PageFileConfig;
 use WeBee\gCMS\Content\PageFile;
@@ -29,6 +31,8 @@ class GenerateCommand extends Command
      * @var array<mixed> $config Command configuration
      */
     private $config = [];
+
+    private $twig;
 
     /**
      * @var array<mixed> $dependencies Dependencies used by command
@@ -67,7 +71,24 @@ class GenerateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->loadConfig($input->getOption('config-file'));
+
+        $this->twig = new TwigEnvironment(
+            new TwigLoader($this->config['resources']['templates']),
+            ['debug' => true]
+        );
+        $this->twig->addExtension(new \Twig\Extension\DebugExtension());
+
+        $fs = $this->dependencies['fs'];
+        $outputPath = $this->config['output']['path'];
+        $staticPath = $outputPath . $this->config['output']['static'];
+
+        $fs->remove($outputPath);
+        $fs->mkdir([$outputPath]);
+        $fs->mirror($this->config['resources']['static'], $staticPath);
+
         $this->parseFiles();
+
+        $output->writeln('Content generated!');
 
         return Command::SUCCESS;
     }
@@ -114,7 +135,7 @@ class GenerateCommand extends Command
             ->ignoreVCS(true)
             ->ignoreVCSIgnored(true)
             ->ignoreUnreadableDirs(true)
-            ->in($this->config['repository_folder'])
+            ->in($this->config['input']['path'])
             ->files()
             ->name('*.page.md')
             ->sortByModifiedTime()
@@ -125,6 +146,10 @@ class GenerateCommand extends Command
     private function parseFiles()
     {
         $pages = [];
+        $categories = [];
+
+        $basePath = $this->config['output']['relative'] ? '' : $this->config['output']['path'];
+        $staticPath = $basePath . $this->config['output']['static'];
 
         foreach ($this->getFilesToParse() as $file) {
             $page = new PageFile(
@@ -135,10 +160,78 @@ class GenerateCommand extends Command
             );
 
             $pages[$page->slug()] = $page;
+
+            foreach ($page->categories() as $category) {
+                if (!array_key_exists($category, $categories)) {
+                    $categories[$category] = [
+                        'name' => $category,
+                        'slug' => sprintf('categories/%s', $category),
+                        'pages' => [],
+                    ];
+                }
+
+                $categories[$category]['pages'][] = $page;
+            }
+        }
+
+        foreach ($pages as $pageSlug => $page) {
             $this->dependencies['fs']->dumpFile(
-                implode('', [$this->config['output_folder'], $page->targetPath(), $page->targetFileName()]),
-                $page->content()
+                implode('', [$this->config['output']['path'], $page->targetPath(), $page->targetFileName(), '.html']),
+                $this->twig->render(
+                    'page.twig',
+                    [
+                        'link' => [
+                            'static' => $staticPath,
+                            'base' => $basePath,
+                        ],
+                        'categories' => array_values($categories),
+                        'page' => $page,
+                    ]
+                )
             );
         }
+
+        foreach (array_values($categories) as $category) {
+            dump($category['name'], count($category['pages']));
+            $this->dependencies['fs']->dumpFile(
+                implode('', [$this->config['output']['path'], '/', $category['slug'], '.html']),
+                $this->twig->render(
+                    'page_list.twig',
+                    [
+                        'link' => [
+                            'static' => $staticPath,
+                            'base' => $basePath,
+                        ],
+                        'categories' => array_values($categories),
+                        'page' => [
+                            'lang' => 'en',
+                            'title' => $category['name'],
+                            'tags' => [$category['name']],
+                            'pages' => $category['pages'],
+                        ],
+                    ]
+                )
+            );
+        }
+
+        $this->dependencies['fs']->dumpFile(
+            implode('', [$this->config['output']['path'], '/index.html']),
+            $this->twig->render(
+                'page_list.twig',
+                [
+                    'link' => [
+                        'static' => $staticPath,
+                        'base' => $basePath,
+                    ],
+                    'categories' => array_values($categories),
+                    'page' => [
+                        'lang' => 'en',
+                        'title' => 'Latest articles',
+                        'tags' => ['latest', 'articles', 'top10'],
+                        'pages' => $pages,
+                    ],
+                ]
+            )
+        );
     }
 }
