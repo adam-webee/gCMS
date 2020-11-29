@@ -21,18 +21,68 @@ Before I jump into describing it, you need to now my constraints.
 
 The last one can be triggered from command line or by web hook triggered by your repository. From now on, process of building static pages will be called "Build".
 
-### How to use it
-* Create new, empty file and name it whatever you want - but add .page extension to it e.g. main.page, how-to-display-logs-in-linux-systems.page;
-* Add content to this file using Markup syntax (described below);
-* Add at the top of the file JSON structure with page preferences like: slug, key words, tags, categories etc. (detailed description of this structure is somewhere below)
-* Add and commit this file to the repository.
-* Trigger build and deploy process
+## Quick start example
+Follow below guide to start with your first simple blog based on gCMS.
 
-And have new perfect content on your web page.
+* Create new folder "blog" with this sub-folders in it: "content", "output", "templates"\
+```bash
+mkdir -p blog/{content,output,templates}
+```
+* Create configuration file blog/config.json\
+```json
+{
+    "input": {
+        "type": "git",
+        "branch": "master",
+        "path": "blog/content"
+    },
+    "output": {
+        "path": "blog/output",
+        "static": "/static",
+        "relative": false
+    },
+    "resources": {
+        "templates": "blog/templates",
+        "static": "blog/templates/static"
+    },
+    "name": "Best blog",
+    "slogan": "Get it done - quickly with gCMS!"
+}
+```
+* Create appropriate twig templates and place them in blog/templates directory (or you can use examples provided with gCMS - !!!eye blindness guaranteed!!!)
+* Create new file and name it whatever you want - but add .page.md extension to it e.g. main.page.md, how-to-display-logs-in-linux-systems.page.md;\
+For the purpose of this instruction we will name it sample.page.md;
+* Add content to this file like in example below. First JSON code block holds page configuration. After it you can place actual content. You can use Markup syntax (currently GitHub markup is supported):\
+```
+    ```json
+    {
+        "slug": "pages/first-page-slug",
+        "title": "My first page in gCMS",
+        "tags": ["learning","gCMS"],
+        "categories": ["HowTo"],
+        "excerpt": "Perfect page excerpt. *Rich* in _content_. With *great* formatting",
+        "author": "Adam Wojciechowski"
+    }
+    ```
+    ## This is page content
+    You can write whatever you want!
+    ```php
+    <?php
+
+    echo 'Even code samples';
+    ```
+```
+* Trigger build process:\
+```bash
+.\gcms generate -c blog/config.json
+```
+
+And thats it! Now you have your blogs' content generated into static files located in blog/output.
 
 ## Details
 
-### How to install and configure gCMS
+### How to install gCMS
+
 #### Installation step by step guide
 #### Configuration step by step guide
 
