@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace WeBee\gCMS\FlexContent\Types;
 
 use DomainException;
-use WeBee\gCMS\Content\ContentInterface;
+use WeBee\gCMS\FlexContent\ContentInterface;
 use WeBee\gCMS\FlexContent\Types\Page;
+use WeBee\gCMS\FlexContent\Types\PageConfig;
 
 class MainPage extends Page
 {
