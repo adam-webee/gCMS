@@ -42,7 +42,7 @@ class MainPage extends Page
         );
 
         $this->renderedContent =  $this->templateManager->render(
-            'blog/main.twig',
+            'main_page.twig',
             ['page' => $this->attributes]
         );
     }

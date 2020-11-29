@@ -47,19 +47,23 @@ class GenerateCommand extends Command
     {
         $this->loadConfig($input->getOption('config-file'));
 
-        $basePath = $this->config['output']['relative'] ? '' : $this->config['output']['path'];
-        $staticPath = $basePath . $this->config['output']['static'];
-
         $templateManager = new DefaultTemplateManager($this->config['resources']['templates'], ['debug' => true]);
         $configProcessor = new DefaultConfigProcessor();
         $contentParser = new DefaultContentParser();
         $fs = new DefaultFileSystem();
 
+        if (!$fs->exists($this->config['output']['path'])) {
+            $fs->mkdir($this->config['output']['path']);
+        }
+
+        $basePath = $this->config['output']['relative'] ? '' : realpath($this->config['output']['path']);
+        $staticPath = $basePath . $this->config['output']['static'];
+
         $blog = new Blog($contentParser, $templateManager, $configProcessor, $fs);
         $blog->load(
             json_encode([
-                'name' => 'WeBee.School',
-                'slogan' => 'This is best slogan',
+                'name' => $this->config['name'],
+                'slogan' => $this->config['slogan'],
                 'path' => [
                     'static' => $staticPath,
                     'base' => $basePath,
@@ -71,6 +75,7 @@ class GenerateCommand extends Command
             ['finder' => new Finder()]
         );
         $blog->export($this->config['output']['path']);
+        $fs->mirror($this->config['resources']['static'], sprintf('%s/%s', $this->config['output']['path'], $this->config['output']['static']));
 
         return Command::SUCCESS;
     }

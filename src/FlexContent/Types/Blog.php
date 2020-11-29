@@ -60,9 +60,8 @@ class Blog extends AbstractContent
         $finder = $this->additionalData['finder'];
 
         return $finder
-            ->ignoreVCS(true)
-            ->ignoreVCSIgnored(true)
             ->ignoreUnreadableDirs(true)
+            ->ignoreVCS(true)
             ->in($this->config['config']['sourcePath'])
             ->files()
             ->name('*.page.md')
