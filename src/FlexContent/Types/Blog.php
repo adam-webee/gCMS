@@ -7,6 +7,7 @@ namespace WeBee\gCMS\FlexContent\Types;
 use IteratorAggregate;
 use WeBee\gCMS\FlexContent\AbstractContent;
 use WeBee\gCMS\FlexContent\ContentRelationInterface;
+use WeBee\gCMS\FlexContent\Types\Category;
 
 class Blog extends AbstractContent
 {
@@ -82,7 +83,9 @@ class Blog extends AbstractContent
             );
         }
 
-        $this->loadPart('{}', [], ContentRelationInterface::RELATION_CHILD, MainPage::class)->export($targetPath, $exported);
+        $this->loadPart('{}', [], ContentRelationInterface::RELATION_TECH_CHILD, MainPage::class)->export($targetPath, $exported);
+        $this->loadPart('{}', [], ContentRelationInterface::RELATION_TECH_CHILD, Category::class)->export($targetPath, $exported);
+
         return $exported;
     }
 
