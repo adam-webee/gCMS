@@ -1,0 +1,13 @@
+{% extends "index.twig" %}
+
+{% block content %}
+    <section>
+        {{ include('content/header.twig') }}
+        <article>
+            {% autoescape false %}
+            {{ page.content }}
+            {% endautoescape %}
+        </article>
+        {{ include('content/footer.twig') }}
+    </section>
+{% endblock %}

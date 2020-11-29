@@ -1,0 +1,17 @@
+{%- for page in page.pages %}
+    <article>
+        <div>
+            <a href="{{ path.base }}/{{ page.slug }}.html">
+                <span>{{ page.title }}</span>
+                {% autoescape false %}
+                    <span>{{ page.excerpt }}</span>
+                {% endautoescape %}
+            </a>
+            <hr>
+            <div>
+                {{ include('content/tags.twig') }}
+                {{ include('content/categories.twig') }}
+            </div>
+        </div>
+    </article>
+{% endfor %}

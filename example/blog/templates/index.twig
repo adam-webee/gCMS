@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang }}">
+    <head>
+        <meta charset="UTF-8">
+        {%- if page.tags %}
+            <meta name="keywords" content="{{ page.tags|join(', ') }}">
+        {% endif %}
+        <link rel="stylesheet" href="{{ path.static }}/prism.css" />
+        <title>{% block title %}{{ page.title }}{% endblock %}</title>
+    </head>
+    <body>
+        <script src="{{ path.static }}/prism.js"></script>
+
+        <div>
+            <header>
+                <nav>
+                    <a href="{{ path.base }}/index.html">
+                        {% block name %}
+                        {{ name }}
+                        {% endblock %}
+                    </a>
+                    <span>
+                        {% block slogan %}
+                        {{ slogan }}
+                        {% endblock %}
+                    </span>
+                </nav>
+            </header>
+
+            {% block content %}
+            {% endblock %}
+
+            <footer>
+                <p>© 2020 Copyright: <a href="{{ path.base }}/index.html">{{ name }}</a></p>
+            </footer>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,15 @@
+{% extends "index.twig" %}
+
+{% block content %}
+    <ul>
+        {% for category in page.categoryMap %}
+        <li>{{ category.name }}
+            <ul>
+                {% for page in category.pages %}
+                    <li><a href="{{ page.slug }}">{{ page.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

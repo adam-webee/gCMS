@@ -1,0 +1,18 @@
+{
+    "input": {
+        "type": "git",
+        "branch": "master",
+        "path": "example/blog/content"
+    },
+    "output": {
+        "path": "example/blog/output",
+        "static": "/static",
+        "relative": false
+    },
+    "resources": {
+        "templates": "example/blog/templates",
+        "static": "example/blog/templates/static"
+    },
+    "name": "Best blog",
+    "slogan": "Get it done - quickly with gCMS!"
+}
