@@ -57,6 +57,7 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
     protected $contentParts = [
         ContentRelationInterface::RELATION_CHILD => [],
         ContentRelationInterface::RELATION_RELATED => [],
+        ContentRelationInterface::RELATION_TECH_CHILD => [],
         ContentRelationInterface::RELATION_PARENT => [null],
     ];
 
@@ -120,7 +121,12 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
 
         $this->contentParts[$relation][] = $content;
 
-        if (ContentRelationInterface::RELATION_CHILD === $relation) {
+        if (
+            in_array(
+                $relation,
+                [ContentRelationInterface::RELATION_CHILD, ContentRelationInterface::RELATION_TECH_CHILD]
+            )
+        ) {
             $content->setParent($this);
         }
 

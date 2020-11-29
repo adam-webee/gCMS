@@ -21,6 +21,13 @@ interface ContentRelationInterface
     public const RELATION_CHILD = 'child';
 
     /**
+     * Describe relation from parent content to its descendants - technical children.
+     *
+     * @var string RELATION_CHILD
+     */
+    public const RELATION_TECH_CHILD = 'techChild';
+
+    /**
      * Describes relation from descendant (child) content to its parent.
      *
      * @var string RELATION_PARENT
