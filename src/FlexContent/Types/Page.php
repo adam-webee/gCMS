@@ -113,7 +113,7 @@ class Page extends AbstractContent
                 ])
             ;
 
-            $this->slug = $this->attributes['slug'];
+            $this->attributes[ContentInterface::SLUG] = $this->slug($this->attributes[ContentInterface::SLUG]);
 
             return;
         }
@@ -134,7 +134,7 @@ class Page extends AbstractContent
         ;
 
         $this->attributes['excerpt'] = $this->contentParser->parse($this->attributes['excerpt']);
-        $this->slug = $this->attributes['slug'];
+        $this->attributes[ContentInterface::SLUG] = $this->slug($this->attributes[ContentInterface::SLUG]);
     }
 
     /**

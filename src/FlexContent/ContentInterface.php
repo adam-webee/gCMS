@@ -51,9 +51,11 @@ interface ContentInterface
      *
      * @see https://en.wikipedia.org/wiki/Clean_URL#Slug What is slug
      *
+     * @param null|string $slug if provided method will work like setter and will set provided slug
+     *
      * @return string
      */
-    public function slug(): string;
+    public function slug(?string $slug = null): string;
 
     /**
      * Adds new content of requested type to current content instance.

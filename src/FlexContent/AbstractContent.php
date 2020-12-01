@@ -86,8 +86,20 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
     /**
      * @inheritDoc
      */
-    public function slug(): string
+    public function slug(?string $slug = null): string
     {
+        if (is_null($slug)) {
+            return $this->slug;
+        }
+
+        $this->slug = $slug;
+
+        $extension = array_key_exists('extension', $this->additionalData) ? $this->additionalData['extension'] : '';
+
+        if (!preg_match("/{$extension}$/", $this->slug)) {
+            $this->slug .= $extension;
+        }
+
         return $this->slug;
     }
 
@@ -162,11 +174,10 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         $slug = $this->slug();
 
         if (in_array($slug, $exported)) {
-            dump('ALREADY EXPORTED for: ' . $slug);
             return $exported;
         }
 
-        $this->fs->dumpFile(sprintf('%s//%s.html', $targetPath, $slug), $this->renderedContent);
+        $this->fs->dumpFile(sprintf('%s//%s', $targetPath, $slug), $this->renderedContent);
 
         $exported[] = $slug;
 

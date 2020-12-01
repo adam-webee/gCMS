@@ -43,7 +43,7 @@ class Blog extends AbstractContent
 
             $this->loadPart(
                 $file->fread($file->getSize()),
-                ['file' => $file],
+                ['file' => $file, 'extension' => $this->config['path']['extension']],
                 ContentRelationInterface::RELATION_CHILD,
                 Page::class
             );
@@ -82,8 +82,10 @@ class Blog extends AbstractContent
             );
         }
 
-        $this->loadPart('{}', [], ContentRelationInterface::RELATION_TECH_CHILD, MainPage::class)->export($targetPath, $exported);
-        $this->loadPart('{}', [], ContentRelationInterface::RELATION_TECH_CHILD, Category::class)->export($targetPath, $exported);
+        $additional = ['extension' => $this->config['path']['extension']];
+
+        $this->loadPart('{}', $additional, ContentRelationInterface::RELATION_TECH_CHILD, MainPage::class)->export($targetPath, $exported);
+        $this->loadPart('{}', $additional, ContentRelationInterface::RELATION_TECH_CHILD, Category::class)->export($targetPath, $exported);
 
         return $exported;
     }

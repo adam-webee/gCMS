@@ -58,7 +58,7 @@ class GenerateCommand extends Command
 
         $basePath = $this->config['output']['relative'] ? '' : realpath($this->config['output']['path']);
         $staticPath = $basePath . $this->config['output']['static'];
-
+        $output->writeln($this->config['output']['extension']);
         $blog = new Blog($contentParser, $templateManager, $configProcessor, $fs);
         $blog->load(
             json_encode([
@@ -67,6 +67,7 @@ class GenerateCommand extends Command
                 'path' => [
                     'static' => $staticPath,
                     'base' => $basePath,
+                    'extension' => $this->config['output']['extension'],
                 ],
                 'config' => [
                     'sourcePath' => $this->config['input']['path'],
@@ -75,7 +76,12 @@ class GenerateCommand extends Command
             ['finder' => new Finder()]
         );
         $blog->export($this->config['output']['path']);
-        $fs->mirror($this->config['resources']['static'], sprintf('%s/%s', $this->config['output']['path'], $this->config['output']['static']));
+        $fs->mirror(
+            $this->config['resources']['static'],
+            sprintf('%s/%s', $this->config['output']['path'], $this->config['output']['static']),
+            null,
+            ['override' => true, 'delete' => true]
+        );
 
         return Command::SUCCESS;
     }

@@ -34,7 +34,7 @@ class MainPage extends Page
             )
         ;
 
-        $this->slug = $this->attributes['slug'];
+        $this->attributes[ContentInterface::SLUG] = $this->slug($this->attributes[ContentInterface::SLUG]);
 
         $this->attributes['pages'] = array_map(
             function ($page) { return $page->get(); },
@@ -80,7 +80,7 @@ class MainPage extends Page
     {
         $exported[] = '';
 
-        $this->fs->dumpFile(sprintf('%s//%s.html', $targetPath, $this->slug), $this->renderedContent);
+        $this->fs->dumpFile(sprintf('%s//%s', $targetPath, $this->slug()), $this->renderedContent);
 
         return $exported;
     }

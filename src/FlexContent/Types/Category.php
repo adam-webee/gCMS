@@ -39,7 +39,7 @@ class Category extends Page
             )
         ;
 
-        $this->slug = $this->attributes['slug'];
+        $this->attributes['slug'] = $this->slug($this->attributes['slug']);
         $this->buildCategories();
         $this->attributes['categoryMap'] = $this->categories;
 
@@ -66,7 +66,7 @@ class Category extends Page
                 if (!array_key_exists($category, $this->categories)) {
                     $this->categories[$category] = [
                         'name' => $category,
-                        'slug' => sprintf('%s/%s', $this->attributes[ContentInterface::SLUG], $category),
+                        'slug' => sprintf('%s/%s', $this->slug(), $category),
                         'pages' => [],
                     ];
                 }
@@ -83,7 +83,7 @@ class Category extends Page
     {
         $exported[] = '';
 
-        $this->fs->dumpFile(sprintf('%s//%s.html', $targetPath, $this->slug), $this->renderedContent);
+        $this->fs->dumpFile(sprintf('%s//%s', $targetPath, $this->slug()), $this->renderedContent);
 
         return $exported;
     }
