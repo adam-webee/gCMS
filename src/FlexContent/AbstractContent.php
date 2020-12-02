@@ -171,6 +171,7 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
      */
     public function export(string $targetPath = 'output', array $exported = []): array
     {
+        $this->render();
         $slug = $this->slug();
 
         if (in_array($slug, $exported)) {
@@ -278,11 +279,23 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
     public function getAll(): array
     {
         $contents = [];
+
         $parent = $this->getParent();
 
         if (!is_null($parent)) {
             $contents[] = $parent;
         }
+
+        foreach ($this->contentParts as $relationType => $relatedContents) {
+            if (ContentRelationInterface::RELATION_PARENT === $relationType) {
+                continue;
+            }
+
+            $contents = array_merge($contents, $relatedContents);
+        }
+
+        return $contents;
+
 
         return array_merge(
             $contents,

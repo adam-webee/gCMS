@@ -42,6 +42,7 @@ class Category extends Page
         $this->attributes['slug'] = $this->slug($this->attributes['slug']);
         $this->buildCategories();
         $this->attributes['categoryMap'] = $this->categories;
+        $this->attributes['menus'] = $this->getMenu();
 
         $this->renderedContent =  $this->templateManager->render(
             'category.twig',
@@ -54,25 +55,36 @@ class Category extends Page
      */
     private function buildCategories()
     {
-        $pages = array_filter(
-            $this->getParent()->getChildren(),
-            function ($content) {
-                return (is_a($content, Page::class) && !is_a($content, get_class($this)));
-            }
-        );
+        $visitedPages = [];
+        $pagesInCategory = [];
 
-        foreach ($pages as $page) {
-            foreach ($page->get('categories') as $category) {
+        $this->categories = [];
+
+        foreach ($this->getParent()->getChildren() as $page) {
+            $categories = $page->get('categories', []);
+            $slug = $page->slug();
+
+            if (empty($categories) || array_key_exists($slug, $visitedPages)) {
+                continue;
+            }
+
+            foreach ($categories as $category) {
                 if (!array_key_exists($category, $this->categories)) {
+                    $pagesInCategory[$category] = [];
                     $this->categories[$category] = [
                         'name' => $category,
-                        'slug' => sprintf('%s/%s', $this->slug(), $category),
                         'pages' => [],
                     ];
                 }
 
-                $this->categories[$category]['pages'][] = $page->get();
+                if (!array_key_exists($slug, $pagesInCategory[$category])) {
+                    $this->categories[$category]['pages'][] = $page->get();
+                    $pagesInCategory[$category][$slug] = true;
+                }
+
             }
+
+            $visitedPages[$slug] = true;
         }
     }
 
@@ -81,6 +93,7 @@ class Category extends Page
      */
     public function export(string $targetPath = 'output', array $exported = []): array
     {
+        $this->render();
         $exported[] = '';
 
         $this->fs->dumpFile(sprintf('%s//%s', $targetPath, $this->slug()), $this->renderedContent);

@@ -7,6 +7,7 @@ namespace WeBee\gCMS\FlexContent\Types;
 use DomainException;
 use WeBee\gCMS\FlexContent\AbstractContent;
 use WeBee\gCMS\FlexContent\ContentInterface;
+use WeBee\gCMS\FlexContent\ContentRelationInterface;
 use WeBee\gCMS\FlexContent\Types\PageConfig;
 
 class Page extends AbstractContent
@@ -57,7 +58,7 @@ class Page extends AbstractContent
         $this->attributes['content'] = $this->contentParser->parse(
             $this->findContent(self::PAGE_PATTERN_CONTENT)
         );
-
+        $this->attributes['menus'] = $this->getMenu();
         $this->renderedContent =  $this->templateManager->render(
             'page.twig',
             ['page' => $this->attributes]
@@ -151,5 +152,25 @@ class Page extends AbstractContent
         }
 
         return $valueIfNotExists;
+    }
+
+    /**
+     * @return array<array>
+     */
+    protected function getMenu(): array
+    {
+        $menuPages = [];
+
+        foreach ($this->getParent()->getAll() as $page) {
+            if (-1 == $page->get('menuItemNumber', -1)) {
+                continue;
+            }
+
+            $menuPages[$page->slug()] = $page->get();
+        }
+
+        usort($menuPages, function ($a, $b) { return $a['menuItemNumber'] <=> $b['menuItemNumber']; });
+
+        return $menuPages;
     }
 }

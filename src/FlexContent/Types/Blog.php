@@ -31,6 +31,10 @@ class Blog extends AbstractContent
         $this->templateManager->addGlobals($processedConfig);
 
         $this->buildPagesFromSource();
+
+        $additional = ['extension' => $this->config['path']['extension']];
+        $this->loadPart('{"menuItemNumber":0}', $additional, ContentRelationInterface::RELATION_TECH_CHILD, MainPage::class);
+        $this->loadPart('{"menuItemNumber":1}', $additional, ContentRelationInterface::RELATION_TECH_CHILD, Category::class);
     }
 
     /**
@@ -81,11 +85,6 @@ class Blog extends AbstractContent
                 $content->export($targetPath, $exported)
             );
         }
-
-        $additional = ['extension' => $this->config['path']['extension']];
-
-        $this->loadPart('{}', $additional, ContentRelationInterface::RELATION_TECH_CHILD, MainPage::class)->export($targetPath, $exported);
-        $this->loadPart('{}', $additional, ContentRelationInterface::RELATION_TECH_CHILD, Category::class)->export($targetPath, $exported);
 
         return $exported;
     }

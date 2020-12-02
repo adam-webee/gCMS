@@ -52,6 +52,39 @@ class PageConfig implements ConfigurationInterface
                     ->info('Page date in Unix timestamp format.')
                     ->defaultValue(time())
                 ->end()
+                ->integerNode('menuItemNumber')
+                    ->min(-1)
+                    ->defaultValue(-1)
+                ->end()
+
+                ->arrayNode('menus')
+                    ->arrayPrototype()
+                        ->ignoreExtraKeys()
+                        ->children()
+                            ->scalarNode('slug')
+                            ->end()
+                            ->scalarNode('title')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+
+                ->arrayNode('pages')
+                    ->arrayPrototype()
+                        ->ignoreExtraKeys()
+                    ->end()
+                ->end()
+
+                ->arrayNode('categoryMap')
+                    ->arrayPrototype()
+                        ->ignoreExtraKeys()
+                    ->end()
+                ->end()
+
+                ->scalarNode('content')
+                    ->defaultValue('')
+                ->end()
+
             ->end();
 
         return $treeBuilder;

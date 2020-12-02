@@ -41,6 +41,8 @@ class MainPage extends Page
             $this->getTopPages()
         );
 
+        $this->attributes['menus'] = $this->getMenu();
+
         $this->renderedContent =  $this->templateManager->render(
             'main_page.twig',
             ['page' => $this->attributes]
@@ -78,6 +80,7 @@ class MainPage extends Page
      */
     public function export(string $targetPath = 'output', array $exported = []): array
     {
+        $this->render();
         $exported[] = '';
 
         $this->fs->dumpFile(sprintf('%s//%s', $targetPath, $this->slug()), $this->renderedContent);
