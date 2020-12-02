@@ -53,6 +53,11 @@ class Page extends AbstractContent
      */
     protected function render()
     {
+        $this->attributes = [
+            ContentInterface::TAGS => [],
+            ContentInterface::CATEGORIES => [],
+        ];
+
         $this->parseAttributes();
         $this->parseAdditionalData();
         $this->attributes['content'] = $this->contentParser->parse(

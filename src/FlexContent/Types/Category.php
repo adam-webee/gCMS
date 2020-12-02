@@ -21,8 +21,10 @@ class Category extends Page
      */
     protected function render()
     {
-        $this->attributes[ContentInterface::SLUG] = 'categories';
-        $this->attributes[ContentInterface::TITLE] = 'Categories';
+        $this->attributes = [
+            ContentInterface::SLUG => 'categories',
+            ContentInterface::TITLE => 'Categories',
+        ];
 
         $toParseAttributes = json_decode($this->rawContent, true);
 

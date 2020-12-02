@@ -16,8 +16,10 @@ class MainPage extends Page
      */
     protected function render()
     {
-        $this->attributes[ContentInterface::SLUG] = 'index';
-        $this->attributes[ContentInterface::TITLE] = 'Home';
+        $this->attributes = [
+            ContentInterface::SLUG => 'index',
+            ContentInterface::TITLE => 'Home',
+        ];
 
         $toParseAttributes = json_decode($this->rawContent, true);
 
