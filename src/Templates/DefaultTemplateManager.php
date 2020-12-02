@@ -6,6 +6,7 @@ namespace WeBee\gCMS\Templates;
 
 use Twig\Environment;
 use Twig\Extension\DebugExtension;
+use Twig\Extra\String\StringExtension;
 use Twig\Loader\FilesystemLoader;
 
 class DefaultTemplateManager implements TemplateManagerInterface
@@ -25,6 +26,8 @@ class DefaultTemplateManager implements TemplateManagerInterface
             new FilesystemLoader($templatesPath),
             $config
         );
+
+        $this->twig->addExtension(new StringExtension());
 
         $loadDebugExtension = (array_key_exists('debug', $config) && $config['debug']);
 
