@@ -35,8 +35,6 @@ class BuildCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->loadConfig($input->getOption('config-file'));
-
         $templateManager = new DefaultTemplateManager($this->config['resources']['templates'], ['debug' => true]);
         $configProcessor = new DefaultConfigProcessor();
         $contentParser = new DefaultContentParser();
