@@ -28,12 +28,12 @@ require_once $file;
 unset($possibleFiles, $possibleFile, $file);
 
 use Symfony\Component\Console\Application;
-use WeBee\gCMS\Command\GenerateCommand;
+use WeBee\gCMS\Command\BuildCommand;
 
-$app = new Application();
+$app = new Application('gCMS Manager', '1.0');
 
 $app->add(
-    new GenerateCommand()
+    new BuildCommand()
 );
 
 $app->run();
