@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WeBee\gCMS\Config;
+namespace WeBee\gCMS\Command;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-class GenerateCommandConfig implements ConfigurationInterface
+class CommandConfig implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {

@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
-use WeBee\gCMS\Config\GenerateCommandConfig;
+use WeBee\gCMS\Command\CommandConfig;
 use WeBee\gCMS\FlexContent\Types\Blog;
 use WeBee\gCMS\Helpers\FileSystem\DefaultFileSystem;
 use WeBee\gCMS\Parsers\DefaultContentParser;
@@ -105,7 +105,7 @@ class GenerateCommand extends Command
 
         $this->config = (new DefaultConfigProcessor())
             ->process(
-                new GenerateCommandConfig(),
+                new CommandConfig(),
                 [$this->config, $config]
             )
         ;
