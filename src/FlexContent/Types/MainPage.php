@@ -39,7 +39,9 @@ class MainPage extends Page
         $this->attributes[ContentInterface::SLUG] = $this->slug($this->attributes[ContentInterface::SLUG]);
 
         $this->attributes['pages'] = array_map(
-            function ($page) { return $page->get(); },
+            function ($page) {
+                return $page->get();
+            },
             $this->getTopPages()
         );
 

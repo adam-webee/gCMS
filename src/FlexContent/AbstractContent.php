@@ -74,8 +74,7 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         TemplateManagerInterface $templatesManager,
         ConfigProcessorInterface $configurationProcessor,
         FileSystemInterface $fs
-    )
-    {
+    ) {
         $this->contentParser = $contentParser;
         $this->templateManager = $templatesManager;
         $this->configProcessor = $configurationProcessor;
@@ -123,8 +122,7 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         array $additionalData = [],
         string $relation = ContentRelationInterface::RELATION_CHILD,
         ?string $typeName = null
-    ): ContentInterface
-    {
+    ): ContentInterface {
         if (empty($typeName)) {
             $typeName = self::class;
         }
@@ -233,7 +231,6 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
      */
     public function getParent(): ?ContentInterface
     {
-
         return $this->contentParts[ContentRelationInterface::RELATION_PARENT][0];
     }
 

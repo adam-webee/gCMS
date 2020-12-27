@@ -83,7 +83,6 @@ class Category extends Page
                     $this->categories[$category]['pages'][] = $page->get();
                     $pagesInCategory[$category][$slug] = true;
                 }
-
             }
 
             $visitedPages[$slug] = true;

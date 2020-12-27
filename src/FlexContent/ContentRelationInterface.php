@@ -82,5 +82,4 @@ interface ContentRelationInterface
      * @return array<ContentInterface>
      */
     public function getAll(): array;
-
 }

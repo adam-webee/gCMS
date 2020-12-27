@@ -107,7 +107,6 @@ class Page extends AbstractContent
         $toParseAttributes = $this->findContent(self::PAGE_PATTERN_ATTRIBUTES);
 
         if (null === $toParseAttributes) {
-
             $this->attributes = $this
                 ->configProcessor
                 ->process($this->configDefinition, [
@@ -174,7 +173,9 @@ class Page extends AbstractContent
             $menuPages[$page->slug()] = $page->get();
         }
 
-        usort($menuPages, function ($a, $b) { return $a['menuItemNumber'] <=> $b['menuItemNumber']; });
+        usort($menuPages, function ($a, $b) {
+            return $a['menuItemNumber'] <=> $b['menuItemNumber'];
+        });
 
         return $menuPages;
     }
