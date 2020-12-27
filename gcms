@@ -29,12 +29,12 @@ unset($possibleFiles, $possibleFile, $file);
 
 use Symfony\Component\Console\Application;
 use WeBee\gCMS\Command\BuildCommand;
+use WeBee\gCMS\Command\UpdateCommand;
 
 $app = new Application('gCMS Manager', '1.0');
 
-$app->add(
-    new BuildCommand()
-);
+$app->add(new BuildCommand());
+$app->add(new UpdateCommand());
 
 $app->run();
 
