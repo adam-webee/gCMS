@@ -89,10 +89,8 @@ interface ContentInterface
      *
      * @param string $targetPath Target path (relative or absolute)
      * @param array<string> $exported Reference to list of slugs of already exported contents
-     *
-     * @return array<string> List of slugs of already exported contents
      */
-    public function export(string $targetPath = 'output', array &$exported = []): array;
+    public function export(string $targetPath = 'output', array &$exported = []): void;
 
     /**
      * Universal content getter. Can get anything that content want to give.

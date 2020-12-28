@@ -77,13 +77,11 @@ class Blog extends AbstractContent
     /**
      * @inheritDoc
      */
-    public function export(string $targetPath = 'output', array &$exported = []): array
+    public function export(string $targetPath = 'output', array &$exported = []): void
     {
         foreach ($this->getAll() as $content) {
             $content->export($targetPath, $exported);
         }
-
-        return $exported;
     }
 
     /**
