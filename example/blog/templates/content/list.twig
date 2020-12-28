@@ -1,7 +1,7 @@
 {%- for page in page.pages %}
     <article>
         <div>
-            <a href="{{ path.base }}/{{ page.slug }}.html">
+            <a href="{{ path.base }}/{{ page.slug }}">
                 <span>{{ page.title }}</span>
                 {% autoescape false %}
                     <span>{{ page.excerpt }}</span>

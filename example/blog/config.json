@@ -1,18 +1,18 @@
 {
     "input": {
-        "type": "git",
-        "branch": "master",
+        "type": "folder",
         "path": "example/blog/content"
     },
     "output": {
         "path": "example/blog/output",
         "static": "/static",
-        "relative": false
+        "relative": false,
+        "extension": ".html"
     },
     "resources": {
         "templates": "example/blog/templates",
         "static": "example/blog/templates/static"
     },
-    "name": "Best blog",
+    "name": "gCMS Example",
     "slogan": "Get it done - quickly with gCMS!"
 }
