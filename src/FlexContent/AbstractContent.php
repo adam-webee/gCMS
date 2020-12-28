@@ -7,7 +7,6 @@ namespace WeBee\gCMS\FlexContent;
 use DomainException;
 use WeBee\gCMS\FlexContent\ContentInterface as ContentInterface;
 use WeBee\gCMS\FlexContent\ContentRelationInterface as ContentRelationInterface;
-use WeBee\gCMS\Helpers\FileSystem\FileSystemInterface;
 use WeBee\gCMS\Parsers\ContentParserInterface;
 use WeBee\gCMS\Processors\ConfigProcessorInterface;
 use WeBee\gCMS\Templates\TemplateManagerInterface;
@@ -28,11 +27,6 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
      * @var ConfigProcessorInterface $configProcessor
      */
     protected $configProcessor;
-
-    /**
-     * @var FileSystemInterface $configProcessor
-     */
-    protected $fs;
 
     /**
      * @var string $rawContent
@@ -72,13 +66,11 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
     public function __construct(
         ContentParserInterface $contentParser,
         TemplateManagerInterface $templatesManager,
-        ConfigProcessorInterface $configurationProcessor,
-        FileSystemInterface $fs
+        ConfigProcessorInterface $configurationProcessor
     ) {
         $this->contentParser = $contentParser;
         $this->templateManager = $templatesManager;
         $this->configProcessor = $configurationProcessor;
-        $this->fs = $fs;
         $this->loadConfigDefinition();
     }
 
@@ -159,29 +151,8 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         return new $className(
             $this->contentParser,
             $this->templateManager,
-            $this->configProcessor,
-            $this->fs
+            $this->configProcessor
         );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function export(string $targetPath = 'output', array &$exported = []): void
-    {
-        $slug = $this->slug();
-
-        if (in_array($slug, $exported)) {
-            return;
-        }
-
-        $this->fs->dumpFile(sprintf('%s//%s', $targetPath, $slug), $this->renderedContent);
-
-        $exported[] = $slug;
-
-        foreach ($this->getAll() as $content) {
-            $content->export($targetPath, $exported);
-        }
     }
 
     /**

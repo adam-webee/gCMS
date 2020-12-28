@@ -82,16 +82,6 @@ class Blog extends AbstractContent
     /**
      * @inheritDoc
      */
-    public function export(string $targetPath = 'output', array &$exported = []): void
-    {
-        foreach ($this->getAll() as $content) {
-            $content->export($targetPath, $exported);
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function loadConfigDefinition()
     {
         $this->configDefinition = new BlogConfig();

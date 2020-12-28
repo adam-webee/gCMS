@@ -83,16 +83,6 @@ interface ContentInterface
     public function load(string $rawContent, array $additionalData = []): self;
 
     /**
-     * Export rendered content to provided path.
-     *
-     * File names and structure will be made of slug.
-     *
-     * @param string $targetPath Target path (relative or absolute)
-     * @param array<string> $exported Reference to list of slugs of already exported contents
-     */
-    public function export(string $targetPath = 'output', array &$exported = []): void;
-
-    /**
      * Universal content getter. Can get anything that content want to give.
      *
      * @param null|string $whatToGet name of that what must be returned
