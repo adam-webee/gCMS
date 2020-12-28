@@ -1,13 +1,15 @@
 <?php
 
+/**
+ * This file is part of the gCMS package. For full copyright and licence information,
+ * please view the LICENCE file that was distributed with this source code.
+ *
+ * (c) Adam Wojciechowski <adam@webee.online>
+ */
+
 declare(strict_types=1);
 
 namespace WeBee\gCMS\FlexContent;
-
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use WeBee\gCMS\Parsers\ParserInterface;
-use WeBee\gCMS\Processors\ConfigProcessorInterface;
-use WeBee\gCMS\Templates\TemplateManagerInterface;
 
 interface ContentInterface
 {

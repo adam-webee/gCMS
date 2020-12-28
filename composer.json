@@ -1,18 +1,15 @@
 {
     "name": "webee-online/g-cms",
     "description": "Simple CMS with a Git repository as a main content datastore",
-    "version": "0.0.1",
     "type": "project",
     "license": "GPL-3.0-only",
     "homepage": "https://github.com/adam-webee/gCMS",
     "authors": [
         {
             "name": "Adam Wojciechowski",
-            "email": "adam@webee.online",
-            "homepage": "https://webee.online"
+            "email": "adam@webee.online"
         }
     ],
-
     "require": {
         "symfony/config": "^5.1",
         "symfony/finder": "^5.1",
