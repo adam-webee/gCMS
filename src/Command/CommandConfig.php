@@ -16,6 +16,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class CommandConfig implements ConfigurationInterface
 {
+    /**
+     * @inheritDoc
+     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('main');

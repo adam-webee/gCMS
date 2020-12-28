@@ -36,7 +36,7 @@ abstract class AbstractCommand extends Command
     }
 
     /**
-     * Defines specific part of command configuration
+     * Defines specific part of command configuration.
      */
     abstract protected function addConfiguration();
 
