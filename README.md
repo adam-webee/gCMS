@@ -59,7 +59,7 @@ And insert below JSON into it:
         "path": "blog/output",
         "static": "/static",
         "relative": false,
-        "extension": '.html'
+        "extension": ".html"
     },
     "resources": {
         "templates": "blog/templates",
