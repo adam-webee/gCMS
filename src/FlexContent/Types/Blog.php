@@ -30,11 +30,16 @@ class Blog extends AbstractContent
 
         $this->templateManager->addGlobals($processedConfig);
 
-        $this->buildPagesFromSource();
-
         $additional = ['extension' => $this->config['path']['extension']];
         $this->loadPart('{"menuItemNumber":0}', $additional, ContentRelationInterface::RELATION_TECH_CHILD, MainPage::class);
         $this->loadPart('{"menuItemNumber":1}', $additional, ContentRelationInterface::RELATION_TECH_CHILD, Category::class);
+
+        $this->buildPagesFromSource();
+
+        // We need to re-render technical children to include data from all regular content children
+        foreach ($this->contentParts[ContentRelationInterface::RELATION_TECH_CHILD] as $content) {
+            $content->render();
+        }
     }
 
     /**
