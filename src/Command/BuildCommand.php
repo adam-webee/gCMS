@@ -46,7 +46,7 @@ class BuildCommand extends AbstractCommand
 
         $basePath = $this->config['output']['relative'] ? '' : realpath($this->config['output']['path']);
         $staticPath = $basePath . $this->config['output']['static'];
-        $output->writeln($this->config['output']['extension']);
+
         $blog = new Blog($contentParser, $templateManager, $configProcessor, $fs);
         $blog->load(
             json_encode([

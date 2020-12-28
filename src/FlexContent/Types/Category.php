@@ -92,19 +92,6 @@ class Category extends Page
     /**
      * @inheritDoc
      */
-    public function export(string $targetPath = 'output', array $exported = []): array
-    {
-        $this->render();
-        $exported[] = '';
-
-        $this->fs->dumpFile(sprintf('%s//%s', $targetPath, $this->slug()), $this->renderedContent);
-
-        return $exported;
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function loadConfigDefinition()
     {
         $this->configDefinition = new PageConfig();

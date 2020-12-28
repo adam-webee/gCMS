@@ -167,7 +167,7 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
     /**
      * @inheritDoc
      */
-    public function export(string $targetPath = 'output', array $exported = []): array
+    public function export(string $targetPath = 'output', array &$exported = []): array
     {
         $this->render();
         $slug = $this->slug();
@@ -181,10 +181,7 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         $exported[] = $slug;
 
         foreach ($this->getAll() as $content) {
-            $exported = array_merge(
-                $exported,
-                $content->export($targetPath, $exported)
-            );
+            $content->export($targetPath, $exported);
         }
 
         return $exported;

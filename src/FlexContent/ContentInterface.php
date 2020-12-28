@@ -88,11 +88,11 @@ interface ContentInterface
      * File names and structure will be made of slug.
      *
      * @param string $targetPath Target path (relative or absolute)
-     * @param array<string> $exported List of slugs of already exported contents
+     * @param array<string> $exported Reference to list of slugs of already exported contents
      *
      * @return array<string> List of slugs of already exported contents
      */
-    public function export(string $targetPath = 'output', array $exported = []): array;
+    public function export(string $targetPath = 'output', array &$exported = []): array;
 
     /**
      * Universal content getter. Can get anything that content want to give.
