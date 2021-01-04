@@ -34,7 +34,7 @@ class CommandConfig implements ConfigurationInterface
                             ->cannotBeEmpty()
                             ->defaultValue('git')
                         ->end()
-                        ->scalarNode('vscSource')
+                        ->scalarNode('vcsSource')
                             ->info('Remote repository path')
                             ->defaultValue('')
                         ->end()
