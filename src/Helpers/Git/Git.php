@@ -92,7 +92,7 @@ class Git implements GitInterface
             $this->execute('checkout -- .');
 
             if ($this->isDirty()) {
-                throw new DomainException(sprintf('Can not change branch to "%s" in repository: %s', $branch, $this->repositoryPath));
+                throw new DomainException(sprintf('Dirty repository. Can not change branch to "%s" in repository: %s', $branch, $this->repositoryPath));
             }
         }
 
@@ -105,7 +105,7 @@ class Git implements GitInterface
             return;
         }
 
-        throw new DomainException(sprintf('Cannot switch to branch "%s" in repository: %s', $branch, $this->repositoryPath));
+        throw new DomainException(sprintf('Can not switch to branch "%s" in repository: %s', $branch, $this->repositoryPath));
     }
 
     /**
@@ -128,9 +128,11 @@ class Git implements GitInterface
         $alreadyUpdated = preg_match('/Already up to date/', $result) ? true : false;
         $pullApplied = preg_match('/From[\s\S]*Updating/m', $result) ? true : false;
 
-        if (!$alreadyUpdated || !$pullApplied) {
-            throw new DomainException(sprintf('Can not pull changes into repository: %s', $this->repositoryPath));
+        if ($alreadyUpdated || $pullApplied) {
+            return;
         }
+
+        throw new DomainException(sprintf('Can not pull changes into repository: %s', $this->repositoryPath));
     }
 
     /**
