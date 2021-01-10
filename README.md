@@ -53,7 +53,8 @@ And insert below JSON into it:
 {
     "input": {
         "type": "folder",
-        "path": "blog/content"
+        "path": "blog",
+        "contentFolder": "/content"
     },
     "output": {
         "path": "blog/output",

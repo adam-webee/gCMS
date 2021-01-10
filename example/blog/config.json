@@ -1,7 +1,8 @@
 {
     "input": {
         "type": "folder",
-        "path": "example/blog/content"
+        "path": "example/blog",
+        "contentFolder": "/content"
     },
     "output": {
         "path": "example/blog/output",

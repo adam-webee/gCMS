@@ -78,7 +78,7 @@ class BuildCommand extends AbstractCommand
                     'extension' => $this->config['output']['extension'],
                 ],
                 'config' => [
-                    'sourcePath' => $this->config['input']['path'],
+                    'sourcePath' => sprintf('%s/%s', $this->config['input']['path'], $this->config['input']['contentFolder']),
                 ]
             ]),
             ['finder' => new Finder()]
