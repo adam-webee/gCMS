@@ -15,95 +15,87 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
-use WeBee\gCMS\Command\AbstractCommand;
 use WeBee\gCMS\FlexContent\ContentInterface;
 use WeBee\gCMS\FlexContent\Types\Blog;
 use WeBee\gCMS\Helpers\FileSystem\DefaultFileSystem;
+use WeBee\gCMS\Helpers\FileSystem\FileSystemInterface;
 use WeBee\gCMS\Parsers\DefaultContentParser;
 use WeBee\gCMS\Processors\DefaultConfigProcessor;
 use WeBee\gCMS\Templates\DefaultTemplateManager;
 
 class BuildCommand extends AbstractCommand
 {
-    /**
-     * @var DefaultFileSystem $fs
-     */
-    private $fs;
+    private FileSystemInterface $fs;
 
-    /**
-     * @inheritDoc
-     */
     protected static $defaultName = 'build';
 
-    /**
-     * @inheritDoc
-     */
-    protected function addConfiguration()
+    protected function additionalConfiguration()
     {
         $this->setDescription('Builds blog content (files + structure) for provided branch in defined repository');
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->fs = new DefaultFileSystem();
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->makeOutputPath($this->config['output']['path']);
+
+        $blog = $this->buildBlogInstance();
+        $blog->load($this->buildBlogJsonConfig(), ['finder' => new Finder()]);
+
+        $this->saveToFiles($blog);
+        $this->publish();
+
+        return Command::SUCCESS;
+    }
+
+    private function makeOutputPath(string $outputPath): void
+    {
+        if (!$this->fs->exists($outputPath)) {
+            $this->fs->mkdir($outputPath);
+        }
+    }
+
+    private function buildBlogInstance(): Blog
     {
         $templateManager = new DefaultTemplateManager($this->config['resources']['templates'], ['debug' => true]);
         $configProcessor = new DefaultConfigProcessor();
         $contentParser = new DefaultContentParser();
 
-        if (!$this->fs->exists($this->config['output']['path'])) {
-            $this->fs->mkdir($this->config['output']['path']);
-        }
+        return new Blog($contentParser, $templateManager, $configProcessor, $this->fs);
+    }
 
+    private function buildBlogJsonConfig(): string
+    {
         $basePath = $this->config['output']['relative'] ? '' : realpath($this->config['output']['path']);
-        $staticPath = $basePath . $this->config['output']['static'];
+        $staticPath = $basePath.$this->config['output']['static'];
 
-        $blog = new Blog($contentParser, $templateManager, $configProcessor, $this->fs);
-        $blog->load(
-            json_encode([
-                'name' => $this->config['name'],
-                'slogan' => $this->config['slogan'],
-                'path' => [
-                    'static' => $staticPath,
-                    'base' => $basePath,
-                    'extension' => $this->config['output']['extension'],
-                ],
-                'config' => [
-                    'sourcePath' => sprintf('%s/%s', $this->config['input']['path'], $this->config['input']['contentFolder']),
-                ]
-            ]),
-            ['finder' => new Finder()]
-        );
-
-        $this->exportToFile($blog);
-        $this->fs->mirror(
-            $this->config['resources']['static'],
-            sprintf('%s/%s', $this->config['output']['path'], $this->config['output']['static']),
-            null,
-            ['override' => true, 'delete' => true]
-        );
-
-        return Command::SUCCESS;
+        return json_encode([
+            'name' => $this->config['name'],
+            'slogan' => $this->config['slogan'],
+            'path' => [
+                'static' => $staticPath,
+                'base' => $basePath,
+                'extension' => $this->config['output']['extension'],
+            ],
+            'config' => [
+                'sourcePath' => sprintf('%s/%s', $this->config['input']['path'], $this->config['input']['contentFolder']),
+            ],
+        ]);
     }
 
     /**
-     * Export content to defined output path.
+     * Recursively saves content to files.
      *
-     * File names and structure will be made of slug.
+     * File names and structure will be extracted from slugs.
      *
-     * @param ContentInterface $content Content to be exported to file
-     * @param array<string> $exported [opt] Reference to list of slugs of already exported contents
+     * @param ContentInterface $content  Content to be exported to file
+     * @param array<string>    $exported [opt] Reference to list of slugs of already exported contents
      */
-    private function exportToFile(ContentInterface $content, array &$exported = []): void
+    private function saveToFiles(ContentInterface $content, array &$exported = []): void
     {
         $slug = $content->slug();
 
@@ -118,7 +110,17 @@ class BuildCommand extends AbstractCommand
         $exported[] = $slug;
 
         foreach ($content->getAll() as $childContent) {
-            $this->exportToFile($childContent, $exported);
+            $this->saveToFiles($childContent, $exported);
         }
+    }
+
+    private function publish(): void
+    {
+        $this->fs->mirror(
+            $this->config['resources']['static'],
+            sprintf('%s/%s', $this->config['output']['path'], $this->config['output']['static']),
+            null,
+            ['override' => true, 'delete' => true]
+        );
     }
 }

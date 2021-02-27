@@ -20,56 +20,27 @@ use WeBee\gCMS\Templates\TemplateManagerInterface;
 
 abstract class AbstractContent implements ContentInterface, ContentRelationInterface
 {
-    /**
-     * @var ParserInterface $contentParser
-     */
-    protected $contentParser;
+    protected ContentParserInterface $contentParser;
 
-    /**
-     * @var TemplateManagerInterface $templateManager
-     */
-    protected $templateManager;
+    protected TemplateManagerInterface $templateManager;
 
-    /**
-     * @var ConfigProcessorInterface $configProcessor
-     */
-    protected $configProcessor;
+    protected ConfigProcessorInterface $configProcessor;
 
-    /**
-     * @var string $rawContent
-     */
-    protected $rawContent = '';
+    protected string $rawContent = '';
 
-    /**
-     * @var string $renderedContent
-     */
-    protected $renderedContent = '';
+    protected string $renderedContent = '';
 
-    /**
-     * @var array<mixed> $additionalData
-     */
-    protected $additionalData = [];
+    protected array $additionalData = [];
 
-    /**
-     * @var array $contentParts [
-     *  @var array<ContentInterface> [RELATION_TYPE]
-     * ]
-     */
-    protected $contentParts = [
-        ContentRelationInterface::RELATION_CHILD => [],
-        ContentRelationInterface::RELATION_RELATED => [],
-        ContentRelationInterface::RELATION_TECH_CHILD => [],
-        ContentRelationInterface::RELATION_PARENT => [null],
+    protected array $contentParts = [
+        self::RELATION_CHILD => [],
+        self::RELATION_RELATED => [],
+        self::RELATION_TECH_CHILD => [],
+        self::RELATION_PARENT => [null],
     ];
 
-    /**
-     * @var string $slug
-     */
-    protected $slug = '';
+    protected string $slug = '';
 
-    /**
-     * @inheritDoc
-     */
     public function __construct(
         ContentParserInterface $contentParser,
         TemplateManagerInterface $templatesManager,
@@ -81,9 +52,6 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         $this->loadConfigDefinition();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function slug(?string $slug = null): string
     {
         if (is_null($slug)) {
@@ -101,9 +69,6 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         return $this->slug;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function load(string $rawContent, array $additionalData = []): ContentInterface
     {
         $this->rawContent = $rawContent;
@@ -113,13 +78,10 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function loadPart(
         string $rawContent,
         array $additionalData = [],
-        string $relation = ContentRelationInterface::RELATION_CHILD,
+        string $relation = self::RELATION_CHILD,
         ?string $typeName = null
     ): ContentInterface {
         if (empty($typeName)) {
@@ -128,43 +90,38 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
 
         $content = $this->buildNewContentInstance($typeName);
 
-        $this->contentParts[$relation][] = $content;
-
-        if (
-            in_array(
-                $relation,
-                [ContentRelationInterface::RELATION_CHILD, ContentRelationInterface::RELATION_TECH_CHILD]
-            )
-        ) {
-            $content->setParent($this);
-        }
+        $this->appendContentPart($content, $relation);
 
         return $content->load($rawContent, $additionalData);
     }
 
-    /**
-     * Creates new instance of content - that will be part of current content.
-     *
-     * @param string $className Fully qualified class name
-     *
-     * @return ContentInterface New content instance
-     */
-    private function buildNewContentInstance(string $className): ContentInterface
+    private function isParentNeeded(string $relation): bool
     {
-        if (!class_exists($className)) {
-            throw new DomainException(sprintf('Requested content type class "%s" does not exists', $className));
+        return in_array($relation, [self::RELATION_CHILD, self::RELATION_TECH_CHILD]);
+    }
+
+    private function appendContentPart(ContentInterface &$content, string $relation): void
+    {
+        $this->contentParts[$relation][] = $content;
+
+        if ($this->isParentNeeded($relation)) {
+            $content->setParent($this);
+        }
+    }
+
+    private function buildNewContentInstance(string $fullyQualifiedClassName): ContentInterface
+    {
+        if (!class_exists($fullyQualifiedClassName)) {
+            throw new DomainException(sprintf('Requested content type class "%s" does not exists', $fullyQualifiedClassName));
         }
 
-        return new $className(
+        return new $fullyQualifiedClassName(
             $this->contentParser,
             $this->templateManager,
             $this->configProcessor
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function __toString(): string
     {
         return $this->renderedContent;
@@ -188,63 +145,42 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
     {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setParent(ContentInterface $parentContent): ContentRelationInterface
     {
-        $this->contentParts[ContentRelationInterface::RELATION_PARENT][0] = $parentContent;
+        $this->contentParts[self::RELATION_PARENT][0] = $parentContent;
 
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getParent(): ?ContentInterface
     {
-        return $this->contentParts[ContentRelationInterface::RELATION_PARENT][0];
+        return $this->contentParts[self::RELATION_PARENT][0];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function appendChild(ContentInterface $childContent): ContentRelationInterface
     {
-        $this->contentParts[ContentRelationInterface::RELATION_CHILD][] = $childContent;
+        $this->contentParts[self::RELATION_CHILD][] = $childContent;
 
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getChildren(): array
     {
-        return $this->contentParts[ContentRelationInterface::RELATION_CHILD];
+        return $this->contentParts[self::RELATION_CHILD];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function appendRelated(ContentInterface $relatedContent): ContentRelationInterface
     {
-        $this->contentParts[ContentRelationInterface::RELATION_RELATED][] = $relatedContent;
+        $this->contentParts[self::RELATION_RELATED][] = $relatedContent;
 
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getRelated(): array
     {
-        return $this->contentParts[ContentRelationInterface::RELATION_RELATED];
+        return $this->contentParts[self::RELATION_RELATED];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getAll(): array
     {
         $contents = [];
@@ -256,7 +192,7 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         }
 
         foreach ($this->contentParts as $relationType => $relatedContents) {
-            if (ContentRelationInterface::RELATION_PARENT === $relationType) {
+            if (self::RELATION_PARENT === $relationType) {
                 continue;
             }
 
@@ -264,20 +200,18 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         }
 
         return $contents;
-
-
-        return array_merge(
-            $contents,
-            $this->getChildren(),
-            $this->getRelated(),
-        );
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function get(?string $whatToGet = null, $valueIfNotExists = null)
+    public function get(?string $whatToGet = null, $valueIfNotExists = null): mixed
     {
+        if (null === $whatToGet) {
+            return $this->attributes;
+        }
+
+        if (array_key_exists($whatToGet, $this->attributes)) {
+            return $this->attributes[$whatToGet];
+        }
+
         return $valueIfNotExists;
     }
 }

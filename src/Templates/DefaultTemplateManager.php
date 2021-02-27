@@ -18,42 +18,29 @@ use Twig\Loader\FilesystemLoader;
 
 class DefaultTemplateManager implements TemplateManagerInterface
 {
-    /**
-     * @var Environment $twig
-     */
-    private $twig;
+    private Environment $twig;
 
-    /**
-     * @param string $templatesPath Path to templates to be used by Twig
-     * @param array<mixed> $config Additional configuration for Twig
-     */
-    public function __construct(string $templatesPath, array $config = [])
+    public function __construct(string $templatesPath, array $templatesConfig = [])
     {
         $this->twig = new Environment(
             new FilesystemLoader($templatesPath),
-            $config
+            $templatesConfig
         );
 
         $this->twig->addExtension(new StringExtension());
 
-        $loadDebugExtension = (array_key_exists('debug', $config) && $config['debug']);
+        $loadDebugExtension = (array_key_exists('debug', $templatesConfig) && $templatesConfig['debug']);
 
         if ($loadDebugExtension) {
             $this->twig->addExtension(new DebugExtension());
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function render(string $templateName, array $templateVariables = []): ?string
     {
         return $this->twig->render($templateName, $templateVariables);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function addGlobals(array $globals): TemplateManagerInterface
     {
         foreach ($globals as $variableName => $variableValue) {

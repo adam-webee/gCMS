@@ -12,25 +12,19 @@ declare(strict_types=1);
 namespace WeBee\gCMS\FlexContent\Types;
 
 use DomainException;
-use WeBee\gCMS\FlexContent\ContentInterface;
-use WeBee\gCMS\FlexContent\Types\Page;
-use WeBee\gCMS\FlexContent\Types\PageConfig;
 
 class Category extends Page
 {
     /**
-     * @var array<ContentInterface> $categories
+     * @var array<ContentInterface>
      */
-    private $categories = [];
+    private array $categories = [];
 
-    /**
-     * @inheritDoc
-     */
     protected function render()
     {
         $this->attributes = [
-            ContentInterface::SLUG => 'categories',
-            ContentInterface::TITLE => 'Categories',
+            self::SLUG => 'categories',
+            self::TITLE => 'Categories',
         ];
 
         $toParseAttributes = json_decode($this->rawContent, true);
@@ -48,12 +42,12 @@ class Category extends Page
             )
         ;
 
-        $this->attributes['slug'] = $this->slug($this->attributes['slug']);
+        $this->attributes[self::SLUG] = $this->slug($this->attributes[self::SLUG]);
         $this->buildCategories();
         $this->attributes['categoryMap'] = $this->categories;
         $this->attributes['menus'] = $this->getMenu();
 
-        $this->renderedContent =  $this->templateManager->render(
+        $this->renderedContent = $this->templateManager->render(
             'category.twig',
             ['page' => $this->attributes]
         );
@@ -97,7 +91,7 @@ class Category extends Page
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function loadConfigDefinition()
     {

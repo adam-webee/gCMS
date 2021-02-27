@@ -14,23 +14,13 @@ namespace WeBee\gCMS\Helpers\Git;
 use DomainException;
 use WeBee\gCMS\Helpers\FileSystem\DefaultFileSystem;
 use WeBee\gCMS\Helpers\FileSystem\FileSystemInterface;
-use WeBee\gCMS\Helpers\Git\GitInterface;
 
 class Git implements GitInterface
 {
-    /**
-     * @var FileSystemInterface $fs
-     */
-    private $fs;
+    private FileSystemInterface $fs;
 
-    /**
-     * @var string $repositoryPath
-     */
-    private $repositoryPath;
+    private string $repositoryPath;
 
-    /**
-     * @inheritDoc
-     */
     public function __construct(string $repositoryPath)
     {
         $this->repositoryPath = realpath($repositoryPath);
@@ -42,19 +32,13 @@ class Git implements GitInterface
         $this->fs = new DefaultFileSystem();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isItGit(): bool
     {
-        $result = $this->execute('status');
+        $result = $this->executeGitCommand('status');
 
         return preg_match('/.*not a git repository.*/', $result) ? false : true;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function clone(string $uri)
     {
         if (false == file_exists($this->repositoryPath)) {
@@ -65,8 +49,8 @@ class Git implements GitInterface
             throw new DomainException(sprintf('%s already contains repository', $this->repositoryPath));
         }
 
-        $result = $this->execute(sprintf('clone %s %s', $uri, $this->repositoryPath));
-        $cloned = preg_match(sprintf("/Cloning into/", $this->repositoryPath), $result) ? true : false;
+        $result = $this->executeGitCommand(sprintf('clone %s %s', $uri, $this->repositoryPath));
+        $cloned = preg_match(sprintf('/Cloning into/', $this->repositoryPath), $result) ? true : false;
 
         if (
             !$cloned
@@ -77,9 +61,6 @@ class Git implements GitInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function checkout(string $branch = 'master', bool $force = false)
     {
         if (!$this->isItGit()) {
@@ -87,16 +68,16 @@ class Git implements GitInterface
         }
 
         if ($this->isDirty()) {
-            $this->execute('checkout -- .');
-            $this->execute('reset HEAD .');
-            $this->execute('checkout -- .');
+            $this->executeGitCommand('checkout -- .');
+            $this->executeGitCommand('reset HEAD .');
+            $this->executeGitCommand('checkout -- .');
 
             if ($this->isDirty()) {
                 throw new DomainException(sprintf('Dirty repository. Can not change branch to "%s" in repository: %s', $branch, $this->repositoryPath));
             }
         }
 
-        $result = $this->execute('checkout ' . $branch);
+        $result = $this->executeGitCommand('checkout '.$branch);
 
         if (
             preg_match("/Already on '$branch'/", $result)
@@ -108,9 +89,6 @@ class Git implements GitInterface
         throw new DomainException(sprintf('Can not switch to branch "%s" in repository: %s', $branch, $this->repositoryPath));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function pull(bool $fastForward = true)
     {
         if ($this->isDirty()) {
@@ -123,7 +101,7 @@ class Git implements GitInterface
             $pullCommand .= ' -ff';
         }
 
-        $result = $this->execute($pullCommand);
+        $result = $this->executeGitCommand($pullCommand);
 
         $alreadyUpdated = preg_match('/Already up to date/', $result) ? true : false;
         $pullApplied = preg_match('/From[\s\S]*Updating/m', $result) ? true : false;
@@ -135,32 +113,19 @@ class Git implements GitInterface
         throw new DomainException(sprintf('Can not pull changes into repository: %s', $this->repositoryPath));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function delete()
     {
         $this->fs->remove($this->repositoryPath);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function isDirty(): bool
     {
-        $result = $this->execute('status');
+        $result = $this->executeGitCommand('status');
 
         return preg_match('/.*nothing to commit, working tree clean.*/', $result) ? false : true;
     }
 
-    /**
-     * Will execute provided command.
-     *
-     * @param string $command Command to execute
-     *
-     * @return null|string Result of command execution (e.g. command output)
-     */
-    private function execute(string $command): ?string
+    private function executeGitCommand(string $command): ?string
     {
         $command = sprintf('git -C %s %s 2>&1', $this->repositoryPath, $command);
         $output = [];

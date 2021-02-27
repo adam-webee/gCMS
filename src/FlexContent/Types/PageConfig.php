@@ -17,9 +17,6 @@ use WeBee\gCMS\FlexContent\ContentInterface;
 
 class PageConfig implements ConfigurationInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('page');

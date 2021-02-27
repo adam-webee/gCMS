@@ -11,23 +11,17 @@ declare(strict_types=1);
 
 namespace WeBee\gCMS\Helpers\FileSystem;
 
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Filesystem as RawFileSystem;
 
 class DefaultFileSystem implements FileSystemInterface
 {
-    /**
-     * @var Filesystem $fs
-     */
-    private $fs;
+    private RawFileSystem $fs;
 
     public function __construct()
     {
-        $this->fs = new Filesystem();
+        $this->fs = new RawFileSystem();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function mkdir($dirs, int $mode = 0777): FileSystemInterface
     {
         $this->fs->mkdir($dirs, $mode);
@@ -35,17 +29,11 @@ class DefaultFileSystem implements FileSystemInterface
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function exists($files): bool
     {
         return $this->fs->exists($files);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function remove($files): FileSystemInterface
     {
         $this->fs->remove($files);
@@ -53,9 +41,6 @@ class DefaultFileSystem implements FileSystemInterface
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function dumpFile(string $filename, $content): FileSystemInterface
     {
         $this->fs->dumpFile($filename, $content);
@@ -63,9 +48,6 @@ class DefaultFileSystem implements FileSystemInterface
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function mirror(string $originDir, string $targetDir, \Traversable $iterator = null, array $options = []): FileSystemInterface
     {
         $this->fs->mirror($originDir, $targetDir, $iterator, $options);

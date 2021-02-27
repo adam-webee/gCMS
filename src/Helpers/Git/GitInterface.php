@@ -38,7 +38,7 @@ interface GitInterface
      * Change current branch to defined one.
      *
      * @param string $branchName [opt] Name of the branch to switch to. By default 'master'
-     * @param bool $force [opt] If true, reverts/removes blocking changes to allow checkout. Default 'false'
+     * @param bool   $force      [opt] If true, reverts/removes blocking changes to allow checkout. Default 'false'
      *
      * @throws DomainException if cannot change branch
      */
@@ -47,7 +47,7 @@ interface GitInterface
     /**
      * Pulls current version from remote repository.
      *
-     * @param bool $fastForward Will use fast forward strategy for merge.
+     * @param bool $fastForward will use fast forward strategy for merge
      */
     public function pull(bool $fastForward = true);
 

@@ -16,9 +16,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class BlogConfig implements ConfigurationInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('blog');

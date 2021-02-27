@@ -16,7 +16,6 @@ interface TemplateManagerInterface
     /**
      * Renders templates using provided data.
      *
-     * @param string $templateName
      * @param array<mixed> $templateVariables [opt] if not passed empty array will be used
      *
      * @return string Rendered template

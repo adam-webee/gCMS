@@ -15,31 +15,21 @@ use DomainException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use WeBee\gCMS\Command\AbstractCommand;
 use WeBee\gCMS\Helpers\FileSystem\DefaultFileSystem;
 use WeBee\gCMS\Helpers\Git\Git;
 
 class UpdateCommand extends AbstractCommand
 {
-    /**
-     * @inheritDoc
-     */
     protected static $defaultName = 'update';
 
-    /**
-     * @inheritDoc
-     */
-    protected function addConfiguration()
+    protected function additionalConfiguration()
     {
         $this->setDescription('Updates repository source content to the newest version');
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ('git' != $this->config['input']['type']) {
+        if ('git' !== $this->config['input']['type']) {
             throw new DomainException('Can not use update command on non Git input path');
         }
 

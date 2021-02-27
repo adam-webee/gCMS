@@ -16,9 +16,9 @@ interface ContentParserInterface
     /**
      * Parses provided input to expected output form.
      *
-     * @param null|string $content Content to be parsed
+     * @param string|null $content Content to be parsed
      *
-     * @return null|string Parsed content
+     * @return string|null Parsed content
      */
     public function parse(?string $content): ?string;
 }

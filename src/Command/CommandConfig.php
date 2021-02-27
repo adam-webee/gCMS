@@ -16,9 +16,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class CommandConfig implements ConfigurationInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('main');
@@ -104,7 +101,7 @@ class CommandConfig implements ConfigurationInterface
             ->validate()
                 ->ifTrue(
                     function ($v) {
-                        $isGitType = $v['input']['type'] === 'git';
+                        $isGitType = 'git' === $v['input']['type'];
                         $isBranchDefined = !empty($v['input']['branch']);
 
                         return $isGitType && !$isBranchDefined;

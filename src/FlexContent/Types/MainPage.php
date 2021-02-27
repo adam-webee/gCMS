@@ -13,19 +13,14 @@ namespace WeBee\gCMS\FlexContent\Types;
 
 use DomainException;
 use WeBee\gCMS\FlexContent\ContentInterface;
-use WeBee\gCMS\FlexContent\Types\Page;
-use WeBee\gCMS\FlexContent\Types\PageConfig;
 
 class MainPage extends Page
 {
-    /**
-     * @inheritDoc
-     */
     protected function render()
     {
         $this->attributes = [
-            ContentInterface::SLUG => 'index',
-            ContentInterface::TITLE => 'Home',
+            self::SLUG => 'index',
+            self::TITLE => 'Home',
         ];
 
         $toParseAttributes = json_decode($this->rawContent, true);
@@ -43,7 +38,7 @@ class MainPage extends Page
             )
         ;
 
-        $this->attributes[ContentInterface::SLUG] = $this->slug($this->attributes[ContentInterface::SLUG]);
+        $this->attributes[self::SLUG] = $this->slug($this->attributes[self::SLUG]);
 
         $this->attributes['pages'] = array_map(
             function ($page) {
@@ -54,7 +49,7 @@ class MainPage extends Page
 
         $this->attributes['menus'] = $this->getMenu();
 
-        $this->renderedContent =  $this->templateManager->render(
+        $this->renderedContent = $this->templateManager->render(
             'main_page.twig',
             ['page' => $this->attributes]
         );
@@ -71,8 +66,11 @@ class MainPage extends Page
     {
         $pages = array_filter(
             $this->getParent()->getChildren(),
-            function ($content) {
-                return (is_a($content, Page::class) && !is_a($content, get_class($this)));
+            function (ContentInterface $content) {
+                $isPage = is_a($content, Page::class);
+                $isNotThisPage = !is_a($content, get_class($this));
+
+                return $isPage && $isNotThisPage;
             }
         );
 
@@ -86,9 +84,6 @@ class MainPage extends Page
         return array_slice($pages, 0, $numberOfPages, true);
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function loadConfigDefinition()
     {
         $this->configDefinition = new PageConfig();

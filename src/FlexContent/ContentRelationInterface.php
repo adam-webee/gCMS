@@ -43,8 +43,6 @@ interface ContentRelationInterface
 
     /**
      * Sets contents' parent.
-     *
-     * @param ContentInterface $parentContent
      */
     public function setParent(ContentInterface $parentContent): self;
 
@@ -57,8 +55,6 @@ interface ContentRelationInterface
 
     /**
      * Appends child to contents' list of children.
-     *
-     * @param ContentInterface $childContent
      */
     public function appendChild(ContentInterface $childContent): self;
 
@@ -71,8 +67,6 @@ interface ContentRelationInterface
 
     /**
      * Appends related content.
-     *
-     * @param ContentInterface $relatedContent
      */
     public function appendRelated(ContentInterface $relatedContent): self;
 

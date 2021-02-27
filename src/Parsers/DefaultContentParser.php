@@ -11,26 +11,17 @@ declare(strict_types=1);
 
 namespace WeBee\gCMS\Parsers;
 
-use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\CommonMarkConverter as Converter;
 
 class DefaultContentParser implements ContentParserInterface
 {
-    /**
-     * @var CommonMarkConverter $converter
-     */
-    private $converter;
+    private Converter $converter;
 
-    /**
-     * Builds converter instance.
-     */
     public function __construct()
     {
-        $this->converter = new CommonMarkConverter();
+        $this->converter = new Converter();
     }
 
-    /**
-     * @inheritDoc
-     */
     public function parse(?string $content): ?string
     {
         if (is_null($content)) {
