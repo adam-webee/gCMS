@@ -11,18 +11,19 @@
         }
     ],
     "require": {
-        "symfony/config": "^5.1",
-        "symfony/finder": "^5.1",
-        "symfony/console": "^5.1",
-        "symfony/filesystem": "^5.1",
+        "php": "^8.0",
+        "symfony/config": "^5.2",
+        "symfony/finder": "^5.2",
+        "symfony/console": "^5.2",
+        "symfony/filesystem": "^5.2",
         "league/commonmark": "^1.5",
-        "twig/twig": "^3.1",
-        "twig/string-extra": "^3.1"
+        "twig/twig": "^3.3",
+        "twig/string-extra": "^3.3"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.16",
-        "kahlan/kahlan": "^4.7",
-        "symfony/var-dumper": "^5.1"
+        "friendsofphp/php-cs-fixer": "^2.18",
+        "kahlan/kahlan": "^5.0",
+        "symfony/var-dumper": "^5.2"
     },
     "autoload":{
         "psr-4": {
