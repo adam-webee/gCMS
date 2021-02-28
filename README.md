@@ -71,7 +71,7 @@ And insert below JSON into it:
 }
 ```
 
-#### Step 3: Content development
+#### Step 3a: Content development
 Create new file and name it whatever you want - but add *.page.md* extension to it e.g. *main.page.md*, *how-to-display-logs-in-linux-systems.page.md*;
 For the purpose of this guide we will name it hello-world.page.md;
 ```bash
@@ -98,6 +98,42 @@ Now add content to this file like in example below. First JSON code block holds 
     <?php
 
     echo 'Even code samples';
+    ```
+```
+
+### Step 3b: Category page
+If you like to add category listing page to your blog - just create new file. Name it whatever you want - but add *.category.md* extension to it, e.g. *blog.category.md*.
+For the purpose of this guide we will name it blog.category.md;
+```bash
+vim content/blog.category.md
+```
+Content for category file is much simpler than for page file, and below is an example:
+```
+    ```json
+    {
+        "slug": "categories",
+        "title": "Categories",
+        "lang": "en",
+        "menuItemNumber": 1
+    }
+    ```
+```
+
+### Step 3c: Main page
+You might need also a start page. Do it in exact same way like category page but change extension to *.mainpage.md*, e.g. *blog.mainpage.md*.
+For the purpose of this guide we will create main page named blog.mainpage.md;
+```bash
+vim content/blog.mainpage.md
+```
+Main page file content might be like this:
+```
+    ```json
+    {
+        "slug": "index",
+        "title": "Home",
+        "lang": "en",
+        "menuItemNumber": 0
+    }
     ```
 ```
 

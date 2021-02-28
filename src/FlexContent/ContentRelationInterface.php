@@ -83,4 +83,9 @@ interface ContentRelationInterface
      * @return array<ContentInterface>
      */
     public function getAll(): array;
+
+    /**
+     * Gets relation name to be used by a content.
+     */
+    public function getRelationName(): string;
 }

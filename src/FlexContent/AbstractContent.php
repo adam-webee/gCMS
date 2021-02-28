@@ -81,8 +81,8 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
     public function loadPart(
         string $rawContent,
         array $additionalData = [],
-        string $relation = self::RELATION_CHILD,
-        ?string $typeName = null
+        ?string $typeName = null,
+        ?string $relation = null
     ): ContentInterface {
         if (empty($typeName)) {
             $typeName = self::class;
@@ -90,7 +90,7 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
 
         $content = $this->buildNewContentInstance($typeName);
 
-        $this->appendContentPart($content, $relation);
+        $this->appendContentPart($content, $relation ?? $content->getRelationName());
 
         return $content->load($rawContent, $additionalData);
     }

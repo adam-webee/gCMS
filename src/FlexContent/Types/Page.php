@@ -71,7 +71,7 @@ class Page extends AbstractContent
         }
     }
 
-    private function parseAttributes()
+    protected function parseAttributes()
     {
         $toParseAttributes = $this->extractContent(self::PAGE_PATTERN_ATTRIBUTES);
 
@@ -133,5 +133,10 @@ class Page extends AbstractContent
         });
 
         return $menuPages;
+    }
+
+    public function getRelationName(): string
+    {
+        return self::RELATION_CHILD;
     }
 }

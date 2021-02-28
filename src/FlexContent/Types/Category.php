@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace WeBee\gCMS\FlexContent\Types;
 
-use DomainException;
-
 class Category extends Page
 {
     /**
@@ -22,27 +20,7 @@ class Category extends Page
 
     protected function render()
     {
-        $this->attributes = [
-            self::SLUG => 'categories',
-            self::TITLE => 'Categories',
-        ];
-
-        $toParseAttributes = json_decode($this->rawContent, true);
-
-        if (null === $toParseAttributes) {
-            throw new DomainException('Bad JSON - can not parse main page attributes');
-        }
-
-        $this->attributes = $this
-            ->configProcessor
-            ->process(
-                $this->configDefinition,
-                // order of arrays matters, as we need to apply parsed attributes onto default one
-                [$this->attributes, $toParseAttributes]
-            )
-        ;
-
-        $this->attributes[self::SLUG] = $this->slug($this->attributes[self::SLUG]);
+        $this->parseAttributes();
         $this->buildCategories();
         $this->attributes['categoryMap'] = $this->categories;
         $this->attributes['menus'] = $this->getMenu();
@@ -96,5 +74,10 @@ class Category extends Page
     protected function loadConfigDefinition()
     {
         $this->configDefinition = new PageConfig();
+    }
+
+    public function getRelationName(): string
+    {
+        return self::RELATION_TECH_CHILD;
     }
 }

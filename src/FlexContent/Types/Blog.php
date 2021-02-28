@@ -13,6 +13,7 @@ namespace WeBee\gCMS\FlexContent\Types;
 
 use IteratorAggregate;
 use WeBee\gCMS\FlexContent\AbstractContent;
+use WeBee\gCMS\FlexContent\TypeFinder;
 
 class Blog extends AbstractContent
 {
@@ -23,11 +24,6 @@ class Blog extends AbstractContent
         $processedConfig = $this->processBlogConfig();
 
         $this->templateManager->addGlobals($processedConfig);
-
-        $additional = ['extension' => $this->config['path']['extension']];
-        $this->loadPart('{"menuItemNumber":0}', $additional, self::RELATION_TECH_CHILD, MainPage::class);
-        $this->loadPart('{"menuItemNumber":1}', $additional, self::RELATION_TECH_CHILD, Category::class);
-
         $this->buildChildrenPages();
 
         // We need to re-render all to make sure, that dynamic content (menus, etc.) are all up to date on all children
@@ -55,8 +51,7 @@ class Blog extends AbstractContent
             $this->loadPart(
                 $file->fread($file->getSize()),
                 ['file' => $file, 'extension' => $this->config['path']['extension']],
-                self::RELATION_CHILD,
-                Page::class
+                TypeFinder::find()->byFile($file)
             );
         }
     }
@@ -70,7 +65,7 @@ class Blog extends AbstractContent
             ->ignoreVCS(true)
             ->in($this->config['config']['sourcePath'])
             ->files()
-            ->name('*.page.md')
+            ->name(TypeFinder::FILE_NAME_PATTERN)
             ->sortByModifiedTime()
             ->reverseSorting()
         ;
@@ -79,5 +74,10 @@ class Blog extends AbstractContent
     protected function loadConfigDefinition()
     {
         $this->configDefinition = new BlogConfig();
+    }
+
+    public function getRelationName(): string
+    {
+        return self::RELATION_PARENT;
     }
 }

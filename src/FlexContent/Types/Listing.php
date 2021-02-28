@@ -11,34 +11,13 @@ declare(strict_types=1);
 
 namespace WeBee\gCMS\FlexContent\Types;
 
-use DomainException;
 use WeBee\gCMS\FlexContent\ContentInterface;
 
-class MainPage extends Page
+class Listing extends Page
 {
     protected function render()
     {
-        $this->attributes = [
-            self::SLUG => 'index',
-            self::TITLE => 'Home',
-        ];
-
-        $toParseAttributes = json_decode($this->rawContent, true);
-
-        if (null === $toParseAttributes) {
-            throw new DomainException('Bad JSON - can not parse main page attributes');
-        }
-
-        $this->attributes = $this
-            ->configProcessor
-            ->process(
-                $this->configDefinition,
-                // order of arrays matters, as we need to apply parsed attributes onto default one
-                [$this->attributes, $toParseAttributes]
-            )
-        ;
-
-        $this->attributes[self::SLUG] = $this->slug($this->attributes[self::SLUG]);
+        $this->parseAttributes();
 
         $this->attributes['pages'] = array_map(
             function ($page) {
@@ -50,7 +29,7 @@ class MainPage extends Page
         $this->attributes['menus'] = $this->getMenu();
 
         $this->renderedContent = $this->templateManager->render(
-            'main_page.twig',
+            'listing_page.twig',
             ['page' => $this->attributes]
         );
     }
@@ -87,5 +66,10 @@ class MainPage extends Page
     protected function loadConfigDefinition()
     {
         $this->configDefinition = new PageConfig();
+    }
+
+    public function getRelationName(): string
+    {
+        return self::RELATION_TECH_CHILD;
     }
 }
