@@ -20,6 +20,8 @@ use WeBee\gCMS\FlexContent\Types\Blog;
 use WeBee\gCMS\Helpers\FileSystem\DefaultFileSystem;
 use WeBee\gCMS\Helpers\FileSystem\FileSystemInterface;
 use WeBee\gCMS\Parsers\DefaultContentParser;
+use WeBee\gCMS\Parsers\ParserManager;
+use WeBee\gCMS\Parsers\SlugLinksParser;
 use WeBee\gCMS\Processors\DefaultConfigProcessor;
 use WeBee\gCMS\Templates\DefaultTemplateManager;
 
@@ -63,9 +65,11 @@ class BuildCommand extends AbstractCommand
     {
         $templateManager = new DefaultTemplateManager($this->config['resources']['templates'], ['debug' => true]);
         $configProcessor = new DefaultConfigProcessor();
-        $contentParser = new DefaultContentParser();
+        $parserManager = new ParserManager(
+            new SlugLinksParser(), new DefaultContentParser()
+        );
 
-        return new Blog($contentParser, $templateManager, $configProcessor, $this->fs);
+        return new Blog($parserManager, $templateManager, $configProcessor, $this->fs);
     }
 
     private function buildBlogJsonConfig(): string

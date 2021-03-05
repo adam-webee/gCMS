@@ -14,13 +14,13 @@ namespace WeBee\gCMS\FlexContent;
 use DomainException;
 use WeBee\gCMS\FlexContent\ContentInterface as ContentInterface;
 use WeBee\gCMS\FlexContent\ContentRelationInterface as ContentRelationInterface;
-use WeBee\gCMS\Parsers\ContentParserInterface;
+use WeBee\gCMS\Parsers\ParserManagerInterface;
 use WeBee\gCMS\Processors\ConfigProcessorInterface;
 use WeBee\gCMS\Templates\TemplateManagerInterface;
 
 abstract class AbstractContent implements ContentInterface, ContentRelationInterface
 {
-    protected ContentParserInterface $contentParser;
+    protected ParserManagerInterface $parserManager;
 
     protected TemplateManagerInterface $templateManager;
 
@@ -42,11 +42,11 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
     protected string $slug = '';
 
     public function __construct(
-        ContentParserInterface $contentParser,
+        ParserManagerInterface $parserManager,
         TemplateManagerInterface $templatesManager,
         ConfigProcessorInterface $configurationProcessor
     ) {
-        $this->contentParser = $contentParser;
+        $this->parserManager = $parserManager;
         $this->templateManager = $templatesManager;
         $this->configProcessor = $configurationProcessor;
         $this->loadConfigDefinition();
@@ -116,7 +116,7 @@ abstract class AbstractContent implements ContentInterface, ContentRelationInter
         }
 
         return new $fullyQualifiedClassName(
-            $this->contentParser,
+            $this->parserManager,
             $this->templateManager,
             $this->configProcessor
         );

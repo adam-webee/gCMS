@@ -15,6 +15,8 @@ use League\CommonMark\CommonMarkConverter as Converter;
 
 class DefaultContentParser implements ContentParserInterface
 {
+    use ParserTrait;
+
     private Converter $converter;
 
     public function __construct()

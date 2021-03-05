@@ -23,6 +23,7 @@ class Blog extends AbstractContent
     {
         $processedConfig = $this->processBlogConfig();
 
+        $this->parserManager->setParam(null, $this->config);
         $this->templateManager->addGlobals($processedConfig);
         $this->buildChildrenPages();
 

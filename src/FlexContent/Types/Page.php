@@ -42,9 +42,10 @@ class Page extends AbstractContent
 
         $this->parseAttributes();
         $this->parseAdditionalData();
-        $this->attributes['content'] = $this->contentParser->parse(
+        $this->attributes['content'] = $this->parserManager->parse(
             $this->extractContent(self::PAGE_PATTERN_CONTENT)
         );
+
         $this->attributes['menus'] = $this->getMenu();
         $this->renderedContent = $this->templateManager->render(
             'page.twig',
@@ -104,7 +105,7 @@ class Page extends AbstractContent
             )
         ;
 
-        $this->attributes['excerpt'] = $this->contentParser->parse($this->attributes['excerpt']);
+        $this->attributes['excerpt'] = $this->parserManager->parse($this->attributes['excerpt']);
         $this->attributes[self::SLUG] = $this->slug($this->attributes[self::SLUG]);
     }
 
