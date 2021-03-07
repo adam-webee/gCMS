@@ -21,6 +21,7 @@ use WeBee\gCMS\Helpers\FileSystem\DefaultFileSystem;
 use WeBee\gCMS\Helpers\FileSystem\FileSystemInterface;
 use WeBee\gCMS\Parsers\DefaultContentParser;
 use WeBee\gCMS\Parsers\ParserManager;
+use WeBee\gCMS\Parsers\SlugImgParser;
 use WeBee\gCMS\Parsers\SlugLinksParser;
 use WeBee\gCMS\Processors\DefaultConfigProcessor;
 use WeBee\gCMS\Templates\DefaultTemplateManager;
@@ -66,7 +67,7 @@ class BuildCommand extends AbstractCommand
         $templateManager = new DefaultTemplateManager($this->config['resources']['templates'], ['debug' => true]);
         $configProcessor = new DefaultConfigProcessor();
         $parserManager = new ParserManager(
-            new SlugLinksParser(), new DefaultContentParser()
+            new SlugImgParser(), new SlugLinksParser(), new DefaultContentParser()
         );
 
         return new Blog($parserManager, $templateManager, $configProcessor, $this->fs);

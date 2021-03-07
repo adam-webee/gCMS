@@ -31,4 +31,20 @@ trait ParserTrait
 
         return $this;
     }
+
+    protected function getExtension(): string
+    {
+        $ext = $this->params['path'] ?? [];
+        $ext = ltrim($ext['extension'] ?? '', '.');
+
+        return $ext ? ".$ext" : $ext;
+    }
+
+    protected function getBasePath(): string
+    {
+        $path = $this->params['path'] ?? [];
+        $path = str_replace(['/', '\\'], '/', $path['base'] ?? '');
+
+        return $path ? "$path/" : $path;
+    }
 }

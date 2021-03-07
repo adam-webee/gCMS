@@ -11,23 +11,23 @@ declare(strict_types=1);
 
 namespace WeBee\gCMS\Parsers;
 
-class SlugLinksParser implements ContentParserInterface
+class SlugImgParser implements ContentParserInterface
 {
     use ParserTrait;
 
-    private const LINKS_PATTERN = '#([^!]\[.*?\]\()({{ slug:([\w\d\/\-\_]+?) }})(\))#ims';
-    private const LINK_REPLACE_TEMPLATE = '${1}%s${3}%s${4}';
+    protected const IMG_PATTERN = '#(!\[.*?\]\()({{ img:([\w\d\/\-\_]+?\.(?:jpg|png|svg|gif)) }}(\)))#ims';
+    protected const IMG_REPLACE_TEMPLATE = '${1}%s${3}${4}';
 
     /**
-     * Will parse link placeholders into actual links.
+     * Will parse img link placeholders into actual img link.
      *
-     * Link placeholder: [Link name]({{ slug:page/slug/without/extension }})
+     * Img link placeholder: ![Image alternative]({{ img:path/to/image.png }})
      */
     public function parse(?string $content): ?string
     {
         $parsedContent = preg_replace(
-            self::LINKS_PATTERN,
-            sprintf(self::LINK_REPLACE_TEMPLATE, $this->getBasePath(), $this->getExtension()),
+            self::IMG_PATTERN,
+            sprintf(self::IMG_REPLACE_TEMPLATE, $this->getBasePath()),
             $content
         );
 
