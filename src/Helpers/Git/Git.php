@@ -23,12 +23,13 @@ class Git implements GitInterface
 
     public function __construct(string $repositoryPath)
     {
-        $this->repositoryPath = realpath($repositoryPath);
+        $realpath = realpath($repositoryPath);
 
-        if (false === $this->repositoryPath) {
+        if (false === $realpath) {
             throw new DomainException(sprintf('Repository path "%s" does not exists', $repositoryPath));
         }
 
+        $this->repositoryPath = $realpath;
         $this->fs = new DefaultFileSystem();
     }
 
@@ -36,7 +37,15 @@ class Git implements GitInterface
     {
         $result = $this->executeGitCommand('status');
 
-        return preg_match('/.*not a git repository.*/', $result) ? false : true;
+        if (preg_match('/.*not a git repository.*/', $result)) {
+            return false;
+        }
+
+        if (preg_match('/.*(command not found|is not recognized).*/', $result)) {
+            return false;
+        }
+
+        return true;
     }
 
     public function clone(string $uri)
