@@ -31,7 +31,9 @@ class TypeFinder
 
     public static function find(): TypeFinder
     {
-        return self::$instance ?? new static();
+        self::$instance ??= new static();
+
+        return self::$instance;
     }
 
     public function registerType(string $typeFullyQualifiedClassName, ?string $typeName = null): TypeFinder

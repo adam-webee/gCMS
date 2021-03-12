@@ -12,11 +12,9 @@ declare(strict_types=1);
 namespace WeBee\gCMSTests\FlexContent;
 
 use DomainException;
-use Kahlan\Plugin\Double;
+use function Kahlan\allow;
 use SplFileInfo;
 use WeBee\gCMS\FlexContent\TypeFinder as TF;
-
-use function Kahlan\allow;
 
 describe(
     'Link Parser',
@@ -25,6 +23,16 @@ describe(
             'can be instantiated',
             function () {
                 expect(TF::find())->toBeAnInstanceOf(TF::class);
+            }
+        );
+
+        it(
+            'is a singleton',
+            function () {
+                $i1 = TF::find();
+                $i2 = TF::find();
+
+                expect($i1)->toBe($i2);
             }
         );
 
@@ -61,7 +69,5 @@ describe(
                 expect($tf->byFile($f))->toBe('WeBee\\gCMSTests\\FlexContent\\DummyTestClass');
             }
         );
-
-
     }
 );
