@@ -14,7 +14,8 @@ return PhpCsFixer\Config::create()
         PhpCsFixer\Finder::create()
             ->in(__DIR__)
             ->append([
-                __DIR__.'.php_sc.dist'
+                __DIR__.'.php_sc.dist',
+                __DIR__.'kahlan-config.php',
             ])
     )
 ;
