@@ -48,6 +48,17 @@ describe(
         );
 
         it(
+            'can register a class of defined type',
+            function () {
+                $f = new SplFileInfo('\var\www\title.dummy-test_class.md');
+                $tf = TF::find();
+                $tf->registerType('WeBee\\gCMSTests\\FlexContent\\DummyTestClass', 'dummytestclass');
+
+                expect($tf->byFile($f))->toBe('WeBee\\gCMSTests\\FlexContent\\DummyTestClass');
+            }
+        );
+
+        it(
             'will throw error for incorrect file name',
             function () {
                 $g = function () {
