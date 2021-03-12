@@ -49,9 +49,10 @@ class TypeFinder
             throw new DomainException(sprintf('Content file does not match required pattern. File %s', $file->getPathname()));
         }
 
-        $typeName = $this->typeNameFromFile($file);
+        $className = $this->classNameFromFile($file);
+        $typeName = strtolower($className);
 
-        return $this->contentTypes[$typeName] ?? $this->registerType(self::NAMESPACE_FOR_CONTENT_TYPES.$typeName)->byFile($file);
+        return $this->contentTypes[$typeName] ?? $this->registerType($this->getNamespace().$className)->byFile($file);
     }
 
     private function typeNameFromReflection(ReflectionClass $classReflection): string
@@ -59,11 +60,17 @@ class TypeFinder
         return strtolower($classReflection->getShortName());
     }
 
-    private function typeNameFromFile(SplFileInfo $file): string
+    private function classNameFromFile(SplFileInfo $file): string
     {
-        $typeName = [];
-        preg_match(self::FILE_NAME_PATTERN, $file->getFileName(), $typeName);
+        $className = [];
+        preg_match(self::FILE_NAME_PATTERN, $file->getFileName(), $className);
+        $className = str_replace(['-', '_'], ' ', strtolower($className[1]));
 
-        return str_replace(['-', '_'], '', strtolower($typeName[1]));
+        return str_replace(' ', '', ucwords($className));
+    }
+
+    private function getNamespace(): string
+    {
+        return self::NAMESPACE_FOR_CONTENT_TYPES;
     }
 }
