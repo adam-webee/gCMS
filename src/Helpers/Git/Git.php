@@ -59,7 +59,7 @@ class Git implements GitInterface
         }
 
         $result = $this->executeGitCommand(sprintf('clone %s %s', $uri, $this->repositoryPath));
-        $cloned = preg_match(sprintf('/Cloning into/', $this->repositoryPath), $result) ? true : false;
+        $cloned = preg_match('/^Cloning into[\S\s]*Resolving deltas[\S\s]*done\.$/', $result) ? true : false;
 
         if (
             !$cloned
