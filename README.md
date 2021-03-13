@@ -1,3 +1,4 @@
+![gCMS](logotype.svg "gCMS - Git-based CMS")
 # gCMS - Git-based CMS
 As the header described - this is CMS where the content you would like to serve is stored under the Git repository.
 
