@@ -1,46 +1,46 @@
-# gCMS - Git based CMS
-As the header described - this is CMS where content you would like to serve is stored under Git repository.
+# gCMS - Git-based CMS
+As the header described - this is CMS where the content you would like to serve is stored under the Git repository.
 
 ## Idea behind
-For a while I was thinking about paying back to the IT world. Not only for offering me the limitless source of knowledge called Internet. But foremost to say "thank you" to all great people that contribute to this source. This is why I wanted to start a blog/page (call it however you want) where I can share what I have learnt - so I can share it with others - mainly with new in IT business.
-I did few rounds to this topic. First with Wordpress (great thing, used it in many projects), then with static pages. As you can see I jumped back and forth looking for solution that will suits me (face the truth - I'm a lazy bastard). But it always was to complicated, to consuming or to boring to use it or lacking of necessary functionalities. And if everything was ok - I found it was to expensive (big hello to Atlassian guys ;)).
+For a while, I was thinking about paying back to the IT world. Not only for offering me the limitless source of knowledge called the Internet. But foremost to say "thank you" to all great people that contribute to it. This is why I wanted to start a blog/page (call it however you want). The place where I can share what I have learned with others. Mainly with new in the IT business.
+I did few rounds on this topic. First with WordPress (a great thing, used it in many projects). Then with static pages. As you can see I jumped back and forth looking for a solution that will suit me. Face the truth - I'm a lazy bastard. But it always was too complicated, too consuming, or too boring to use, or lacking necessary functionalities. And if everything was ok - I found it was too expensive (a big hello to Atlassian guys ;)).
 
-One day - exactly 7/11/2020 (for those from USA d/m/yyyy) - I figured out that publishing content to the web is in its fundamentals nothing else like doing new feature in the code. So why not to create content in favorite editor/IDE and when it is finished commit it to the repository?
+One day - exactly 7/11/2020 (for those from USA d/m/yyyy) - I figured out that publishing content to the web is in its fundamentals nothing else like doing a new feature in the code. So why not create content in favorite editor/IDE and when it is finished commit it to the repository?
 
 This was this big moment - use Git as content storage.
 
-## How does it works?
-gCMS is a tool that reads selected input folder for particular file types (*.page.md). For each of them it will create static html (or other) page according to defined templates. Such static files can be uploaded to any server that can host html files (simple Apache host will do the trick).
+## How does it work?
+gCMS is a tool that reads selected input folder for particular file types (e.g.: *.page.md, *.category.md, etc.). For each of them, it will create a static HTML (or other) page according to defined templates. Such static files can be uploaded to any server that can host HTML files (a simple Apache host will do the trick or cloud storage like S3).
 
-Before I jump into describing it, you need to now my assumptions.
+Before I jump into describing it, you need to know my assumptions.
 
 ### Assumptions
-* Content first approach - I like to focus on creating content. I don't want to spend time on figuring out how to add beautifully code snippet. This is why GitHub Flavored Markdown will be used for content (as a bonus I can see my formatted content straight on github web page).
+* Content first approach - I like to focus on creating content. I don't want to spend time figuring out how to add beautifully code snippets. This is why GitHub Flavored Markdown will be used for content (as a bonus I can see my formatted content straight on the GitHub web page).
 * Follow the WVD process: Write, Verify, Deploy:
     * Write content, by creating appropriate markup described documents;
     * Create pull/merge request, do the code review and if everything is ok - accept it;
-    * Deploy content by building bunch of static html files that you can upload to almost any web server.
+    * Deploy content by building a bunch of static HTML files that you can upload to almost any web server.
 
-The last one can be triggered by the Cron job or by web hook triggered by your repository. From now on, process of building static pages will be called "Build".
+The last one can be triggered by the Cron job or by a webhook triggered from your repository. Starting now, the process of building static pages will be called "Build".
 
 ### How to start guide
-Follow below guide to start with your first simple blog based on gCMS.
+Follow this guide to start with your first simple blog based on gCMS.
 
 #### Step 1: Preparation
 ```bash
 # Create new folder "blog" and necessary sub folders
 mkdir -p blog/{content,output,templates} && cd blog
 
-# Initialize new composer project - follow the guide
+# Initialize new composer project - follow on-screen instructions
 composer init
 
-# Add gCMS to your project if you didn't do it during initialization
+# Add gCMS to your project if you didn't do it during the initialization
 composer require webee-online/g-cms
 
 # Install dependencies
 composer install
 
-# As a start point you can use templates and content I prepared for demo - but be warned - eye pain guaranteed!!!
+# As a start point you can use templates and content I prepared for a demo - but be warned - eye pain guaranteed!!!
 cp -r vendor/webee-online/g-cms/example/blog/{content,templates} ./
 ```
 #### Step 2: Configuration
@@ -48,7 +48,7 @@ Create configuration file "blog/config.test.json".
 ```bash
 vim config.test.json
 ```
-And insert below JSON into it:
+And insert the following JSON into it:
 ```json
 {
     "input": {
@@ -77,7 +77,7 @@ For the purpose of this guide we will name it hello-world.page.md;
 ```bash
 vim content/hello-world.page.md
 ```
-Now add content to this file like in example below. First JSON code block holds page configuration. After it you can place actual content. You can use GitHub Flavored Markup syntax:
+Now add content to this file like in the example below. JSON code block holds page configuration and is mandatory. Place actual content after it. You can use GitHub Flavored Markup syntax:
 ```
     ```json
     {
@@ -102,7 +102,7 @@ Now add content to this file like in example below. First JSON code block holds 
 ```
 
 ### Step 3b: Category page
-If you like to add category listing page to your blog - just create new file. Name it whatever you want - but add *.category.md* extension to it, e.g. *blog.category.md*.
+If you like to add a category listing page to your blog - just create a new file. Name it whatever you want - but add *.category.md* extension to it, e.g. *blog.category.md*.
 For the purpose of this guide we will name it blog.category.md;
 ```bash
 vim content/blog.category.md
@@ -120,8 +120,8 @@ Content for category file is much simpler than for page file, and below is an ex
 ```
 
 ### Step 3c: Main page
-You might need also a start page. Do it in exact same way like category page but change extension to *.mainpage.md*, e.g. *blog.mainpage.md*.
-For the purpose of this guide we will create main page named blog.mainpage.md;
+You might need also a start page. Do it in the same way as the category page but change the extension to *.mainpage.md*, e.g. *blog.mainpage.md*.
+For this guide we will create main page named blog.mainpage.md;
 ```bash
 vim content/blog.mainpage.md
 ```
@@ -143,4 +143,4 @@ Trigger build process:
 .\gcms build -c config.json
 ```
 
-And thats it! Now you have your blog content generated into static files located in blog/output directory.
+And that's it! Now you have your blog content generated into static files located in blog/output directory.
