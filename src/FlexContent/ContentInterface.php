@@ -44,6 +44,21 @@ interface ContentInterface
     public const EXCERPT = 'excerpt';
 
     /**
+     * @var string CREATE_DATE
+     */
+    public const CREATE_DATE = 'createDate';
+
+    /**
+     * @var string MENU_ITEM_NUMBER
+     */
+    public const MENU_ITEM_NUMBER = 'menuItemNumber';
+
+    /**
+     * @var string SKIP_FROM_LISTING
+     */
+    public const SKIP_FROM_LISTING = 'skipFromListings';
+
+    /**
      * Returns contents' slug.
      *
      * Slug must be composed from url safe characters:

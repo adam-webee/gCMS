@@ -48,8 +48,9 @@ class Listing extends Page
             function (ContentInterface $content) {
                 $isPage = is_a($content, Page::class);
                 $isNotThisPage = !is_a($content, get_class($this));
+                $skip = $content->get(static::SKIP_FROM_LISTING);
 
-                return $isPage && $isNotThisPage;
+                return $isPage && !$skip && $isNotThisPage;
             }
         );
 
