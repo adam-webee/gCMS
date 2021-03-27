@@ -77,9 +77,9 @@ class Git implements GitInterface
         }
 
         if ($this->isDirty()) {
-            $this->executeGitCommand('checkout -- .');
-            $this->executeGitCommand('reset HEAD .');
-            $this->executeGitCommand('checkout -- .');
+            if ($force) {
+                $this->clearDirty();
+            }
 
             if ($this->isDirty()) {
                 throw new DomainException(sprintf('Dirty repository. Can not change branch to "%s" in repository: %s', $branch, $this->repositoryPath));
@@ -89,13 +89,20 @@ class Git implements GitInterface
         $result = $this->executeGitCommand('checkout '.$branch);
 
         if (
-            preg_match("/Already on '$branch'/", $result)
-            || preg_match("/Switched to branch '$branch'/", $result)
+            preg_match("#Already on '$branch'#", $result)
+            || preg_match("#Switched to branch '$branch'#", $result)
         ) {
             return;
         }
 
         throw new DomainException(sprintf('Can not switch to branch "%s" in repository: %s', $branch, $this->repositoryPath));
+    }
+
+    private function clearDirty(): void
+    {
+        $this->executeGitCommand('checkout -- .');
+        $this->executeGitCommand('reset HEAD .');
+        $this->executeGitCommand('checkout -- .');
     }
 
     public function pull(bool $fastForward = true)
