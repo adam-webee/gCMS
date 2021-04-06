@@ -97,6 +97,10 @@ class CommandConfig implements ConfigurationInterface
                     ->info('Generated content slogan')
                     ->defaultValue('')
                 ->end()
+                ->scalarNode('url')
+                    ->info('Blog\'s URL. E.g. http://webee/school')
+                    ->defaultValue('')
+                ->end()
             ->end()
             ->validate()
                 ->ifTrue(

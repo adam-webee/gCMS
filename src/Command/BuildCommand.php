@@ -75,7 +75,12 @@ class BuildCommand extends AbstractCommand
 
     private function buildBlogJsonConfig(): string
     {
-        $basePath = $this->config['output']['relative'] ? '' : realpath($this->config['output']['path']);
+        if ($this->config['output']['relative']) {
+            $basePath = $this->config['url'] ? $this->config['url'] : '';
+        } else {
+            $basePath = realpath($this->config['output']['path']);
+        }
+
         $staticPath = $basePath.$this->config['output']['static'];
 
         return json_encode([
