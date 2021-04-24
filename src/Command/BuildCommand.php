@@ -28,6 +28,8 @@ use WeBee\gCMS\Templates\DefaultTemplateManager;
 
 class BuildCommand extends AbstractCommand
 {
+    private const MEDIA_FILES_PATTERN = '/^.*\.(jpg|gif|svg|png)$/i';
+
     private FileSystemInterface $fs;
 
     protected static $defaultName = 'build';
@@ -50,6 +52,7 @@ class BuildCommand extends AbstractCommand
         $blog->load($this->buildBlogJsonConfig(), ['finder' => new Finder()]);
 
         $this->saveToFiles($blog);
+        $this->publishMediaFiles();
         $this->publish();
 
         return Command::SUCCESS;
@@ -122,6 +125,27 @@ class BuildCommand extends AbstractCommand
         foreach ($content->getAll() as $childContent) {
             $this->saveToFiles($childContent, $exported);
         }
+    }
+
+    private function publishMediaFiles(): void
+    {
+        $mediaFinder = new Finder();
+        $contentFolder = sprintf('%s/%s', $this->config['input']['path'], $this->config['input']['contentFolder']);
+        $mediaFinder
+            ->ignoreUnreadableDirs(true)
+            ->ignoreVCS(true)
+            ->in($contentFolder)
+            ->files()
+            ->name(static::MEDIA_FILES_PATTERN);
+
+        $this->fs->mirror(
+            $contentFolder,
+            $this->config['output']['path'],
+            $mediaFinder,
+            // Until there is an error in Symfony Finder do not add option delete set to true
+            // as it will remove files from source not only target directory!
+            ['override' => true]
+        );
     }
 
     private function publish(): void
