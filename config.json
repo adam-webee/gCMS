@@ -16,6 +16,14 @@
                 "100":"WeBee\\gCMS\\Parsers\\SlugImgParser",
                 "101":"WeBee\\gCMS\\Parsers\\SlugLinksParser"
             }
+        },
+        "content": {
+            "types": {
+                "page": "WeBee\\gCMS\\FlexContent\\Types\\Page",
+                "category": "WeBee\\gCMS\\FlexContent\\Types\\Category",
+                "error": "WeBee\\gCMS\\FlexContent\\Types\\Error",
+                "listing": "WeBee\\gCMS\\FlexContent\\Types\\Listing"
+            }
         }
     }
 }

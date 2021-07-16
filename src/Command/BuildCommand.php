@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use WeBee\gCMS\FlexContent\ContentInterface;
+use WeBee\gCMS\FlexContent\TypeFinder;
 use WeBee\gCMS\FlexContent\Types\Blog;
 use WeBee\gCMS\Helpers\FileSystem\DefaultFileSystem;
 use WeBee\gCMS\Helpers\FileSystem\FileSystemInterface;
@@ -72,21 +73,29 @@ class BuildCommand extends AbstractCommand
             ...$this->buildParsers($this->config['config']['parser']['parsers'])
         );
 
+        $this->registerContentTypes($this->config['config']['content']['types']);
+
         return new Blog($parserManager, $templateManager, $configProcessor, $this->fs);
     }
 
     private function buildParsers(array $parsersClassNames): array
     {
         $parsersClassNames = array_unique($parsersClassNames);
-        $keys = array_keys($parsersClassNames);
-        sort($keys);
+        ksort($parsersClassNames);
         $parsers = [];
 
-        foreach ($keys as $key) {
-            $parsers[] = new $parsersClassNames[$key]();
+        foreach ($parsersClassNames as $parsingOrder => $parserClassName) {
+            $parsers[] = new $parserClassName();
         }
 
         return $parsers;
+    }
+
+    private function registerContentTypes(array $typesDefinitions): void
+    {
+        foreach ($typesDefinitions as $typeName => $typeClass) {
+            TypeFinder::find()->registerType($typeClass, $typeName);
+        }
     }
 
     private function buildBlogJsonConfig(): string

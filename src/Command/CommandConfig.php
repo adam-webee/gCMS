@@ -164,6 +164,7 @@ class CommandConfig implements ConfigurationInterface
                 ->end()
                 ->append($this->defineTemplateConfiguration())
                 ->append($this->defineParsersConfiguration())
+                ->append($this->defineContentTypes())
             ->end()
         ;
 
@@ -216,6 +217,27 @@ class CommandConfig implements ConfigurationInterface
                     ->useAttributeAsKey('name')
                     ->scalarPrototype()
                         ->info('Qualified name of a class that will parse content. Must fulfill WeBee\gCMS\Parsers\ContentParserInterface')
+                        ->cannotBeEmpty()
+                    ->end()
+                ->end()
+            ->end()
+        ;
+
+        return $node;
+    }
+
+    private function defineContentTypes()
+    {
+        $treeBuilder = new TreeBuilder('content');
+
+        $node = $treeBuilder->getRootNode()
+            ->children()
+                ->arrayNode('types')
+                    ->isRequired()
+                    ->requiresAtLeastOneElement()
+                    ->useAttributeAsKey('name')
+                    ->scalarPrototype()
+                        ->info('Qualified name of a content type class. Must fulfill WeBee\gCMS\FlexContent\ContentInterface')
                         ->cannotBeEmpty()
                     ->end()
                 ->end()
