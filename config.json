@@ -1,0 +1,21 @@
+{
+    "config": {
+        "mediaFilesPattern": "/^.*\\.(jpg|gif|svg|png)$/i",
+        "processor": "WeBee\\gCMS\\Processors\\DefaultConfigProcessor",
+        "templates": {
+            "manager": "WeBee\\gCMS\\Templates\\DefaultTemplateManager",
+            "debug": false,
+            "extensions": [
+                "Twig\\Extra\\String\\StringExtension"
+            ]
+        },
+        "parser": {
+            "manager": "WeBee\\gCMS\\Parsers\\ParserManager",
+            "parsers": {
+                "0":"WeBee\\gCMS\\Parsers\\DefaultContentParser",
+                "100":"WeBee\\gCMS\\Parsers\\SlugImgParser",
+                "101":"WeBee\\gCMS\\Parsers\\SlugLinksParser"
+            }
+        }
+    }
+}

@@ -19,17 +19,9 @@ use WeBee\gCMS\FlexContent\ContentInterface;
 use WeBee\gCMS\FlexContent\Types\Blog;
 use WeBee\gCMS\Helpers\FileSystem\DefaultFileSystem;
 use WeBee\gCMS\Helpers\FileSystem\FileSystemInterface;
-use WeBee\gCMS\Parsers\DefaultContentParser;
-use WeBee\gCMS\Parsers\ParserManager;
-use WeBee\gCMS\Parsers\SlugImgParser;
-use WeBee\gCMS\Parsers\SlugLinksParser;
-use WeBee\gCMS\Processors\DefaultConfigProcessor;
-use WeBee\gCMS\Templates\DefaultTemplateManager;
 
 class BuildCommand extends AbstractCommand
 {
-    private const MEDIA_FILES_PATTERN = '/^.*\.(jpg|gif|svg|png)$/i';
-
     private FileSystemInterface $fs;
 
     protected static $defaultName = 'build';
@@ -67,13 +59,34 @@ class BuildCommand extends AbstractCommand
 
     private function buildBlogInstance(): Blog
     {
-        $templateManager = new DefaultTemplateManager($this->config['resources']['templates'], ['debug' => true]);
-        $configProcessor = new DefaultConfigProcessor();
-        $parserManager = new ParserManager(
-            new SlugImgParser(), new SlugLinksParser(), new DefaultContentParser()
+        $templateManagerClass = $this->config['config']['templates']['manager'];
+        $configProcessorClass = $this->config['config']['processor'];
+        $parserManagerClass = $this->config['config']['parser']['manager'];
+
+        $templateManager = new $templateManagerClass(
+            $this->config['resources']['templates'],
+            $this->config['config']['templates']
+        );
+        $configProcessor = new $configProcessorClass();
+        $parserManager = new $parserManagerClass(
+            ...$this->buildParsers($this->config['config']['parser']['parsers'])
         );
 
         return new Blog($parserManager, $templateManager, $configProcessor, $this->fs);
+    }
+
+    private function buildParsers(array $parsersClassNames): array
+    {
+        $parsersClassNames = array_unique($parsersClassNames);
+        $keys = array_keys($parsersClassNames);
+        sort($keys);
+        $parsers = [];
+
+        foreach ($keys as $key) {
+            $parsers[] = new $parsersClassNames[$key]();
+        }
+
+        return $parsers;
     }
 
     private function buildBlogJsonConfig(): string
@@ -136,7 +149,7 @@ class BuildCommand extends AbstractCommand
             ->ignoreVCS(true)
             ->in($contentFolder)
             ->files()
-            ->name(static::MEDIA_FILES_PATTERN);
+            ->name($this->config['config']['mediaFilesPattern']);
 
         $this->fs->mirror(
             $contentFolder,
