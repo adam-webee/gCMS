@@ -20,6 +20,8 @@ use WeBee\gCMS\Processors\DefaultConfigProcessor;
 
 abstract class AbstractCommand extends Command
 {
+    protected const DEFAULT_CONFIG_FILE_PATH = __DIR__.'\\..\\..\\config.json';
+
     protected array $config = [];
 
     protected function configure()
@@ -37,6 +39,20 @@ abstract class AbstractCommand extends Command
 
     protected function loadConfig(?string $configFilePath)
     {
+        $this->config = (new DefaultConfigProcessor())
+            ->process(
+                new CommandConfig(),
+                [
+                    $this->config,
+                    $this->loadFromFile(self::DEFAULT_CONFIG_FILE_PATH),
+                    $this->loadFromFile($configFilePath),
+                ]
+            )
+        ;
+    }
+
+    protected function loadFromFile(string $configFilePath): array
+    {
         if (null === $configFilePath || !file_exists($configFilePath)) {
             throw new DomainException('Configuration file not found');
         }
@@ -47,11 +63,6 @@ abstract class AbstractCommand extends Command
             throw new DomainException('Configuration file is not a valid JSON file');
         }
 
-        $this->config = (new DefaultConfigProcessor())
-            ->process(
-                new CommandConfig(),
-                [$this->config, $config]
-            )
-        ;
+        return $config;
     }
 }

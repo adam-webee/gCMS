@@ -11,9 +11,8 @@ declare(strict_types=1);
 
 namespace WeBee\gCMS\Templates;
 
+use Exception;
 use Twig\Environment;
-use Twig\Extension\DebugExtension;
-use Twig\Extra\String\StringExtension;
 use Twig\Loader\FilesystemLoader;
 
 class DefaultTemplateManager implements TemplateManagerInterface
@@ -27,13 +26,14 @@ class DefaultTemplateManager implements TemplateManagerInterface
             $templatesConfig
         );
 
-        $this->twig->addExtension(new StringExtension());
-
+        $extensions = $templatesConfig['extensions'] ?? [];
         $loadDebugExtension = (array_key_exists('debug', $templatesConfig) && $templatesConfig['debug']);
 
         if ($loadDebugExtension) {
-            $this->twig->addExtension(new DebugExtension());
+            $extensions[] = 'Twig\Extension\DebugExtension';
         }
+
+        $this->loadExtensions($extensions);
     }
 
     public function render(string $templateName, array $templateVariables = []): ?string
@@ -48,5 +48,16 @@ class DefaultTemplateManager implements TemplateManagerInterface
         }
 
         return $this;
+    }
+
+    private function loadExtensions(array $extensions = []): void
+    {
+        foreach ($extensions as $extension) {
+            if (!class_exists($extension)) {
+                throw new Exception("Requested extension '$extension' does not exists");
+            }
+
+            $this->twig->addExtension(new $extension());
+        }
     }
 }

@@ -4,18 +4,12 @@ return PhpCsFixer\Config::create()
     ->setUsingCache(false)
     ->setRiskyAllowed(false)
     ->setRules([
-        '@PSR1' => true,
-        '@PSR2' => true,
         '@PSR12' => true,
-        '@PHP80Migration' => true,
         '@Symfony' => true,
     ])
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->in(__DIR__)
-            ->append([
-                __DIR__.'.php_sc.dist',
-                __DIR__.'kahlan-config.php',
-            ])
+            ->append([__DIR__.'.php_sc.dist'])
     )
 ;

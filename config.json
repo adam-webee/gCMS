@@ -1,0 +1,29 @@
+{
+    "config": {
+        "mediaFilesPattern": "/^.*\\.(jpg|gif|svg|png)$/i",
+        "processor": "WeBee\\gCMS\\Processors\\DefaultConfigProcessor",
+        "templates": {
+            "manager": "WeBee\\gCMS\\Templates\\DefaultTemplateManager",
+            "debug": false,
+            "extensions": [
+                "Twig\\Extra\\String\\StringExtension"
+            ]
+        },
+        "parser": {
+            "manager": "WeBee\\gCMS\\Parsers\\ParserManager",
+            "parsers": {
+                "0":"WeBee\\gCMS\\Parsers\\DefaultContentParser",
+                "100":"WeBee\\gCMS\\Parsers\\SlugImgParser",
+                "101":"WeBee\\gCMS\\Parsers\\SlugLinksParser"
+            }
+        },
+        "content": {
+            "types": {
+                "page": "WeBee\\gCMS\\FlexContent\\Types\\Page",
+                "category": "WeBee\\gCMS\\FlexContent\\Types\\Category",
+                "error": "WeBee\\gCMS\\FlexContent\\Types\\Error",
+                "listing": "WeBee\\gCMS\\FlexContent\\Types\\Listing"
+            }
+        }
+    }
+}
