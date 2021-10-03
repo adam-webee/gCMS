@@ -20,7 +20,7 @@ use WeBee\gCMS\Processors\DefaultConfigProcessor;
 
 abstract class AbstractCommand extends Command
 {
-    protected const DEFAULT_CONFIG_FILE_PATH = __DIR__.'\\..\\..\\config.json';
+    protected const DEFAULT_CONFIG_FILE_PATH = __DIR__.'//..//..//config.json';
 
     protected array $config = [];
 
