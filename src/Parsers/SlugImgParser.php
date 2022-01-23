@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace WeBee\gCMS\Parsers;
 
+/**
+ * @deprecated use WeBee\gCMS\Parsers\LinksParser instead
+ */
 class SlugImgParser implements ContentParserInterface
 {
     use ParserTrait;

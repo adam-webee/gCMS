@@ -12,10 +12,10 @@
         "parser": {
             "manager": "WeBee\\gCMS\\Parsers\\ParserManager",
             "parsers": {
+                "-11": "WeBee\\gCMS\\Parsers\\LinksParser",
+                "-10":"WeBee\\gCMS\\Parsers\\SlugImgParser",
                 "0":"WeBee\\gCMS\\Parsers\\ElementParser",
-                "1":"WeBee\\gCMS\\Parsers\\DefaultContentParser",
-                "101":"WeBee\\gCMS\\Parsers\\SlugImgParser",
-                "102":"WeBee\\gCMS\\Parsers\\SlugLinksParser"
+                "1":"WeBee\\gCMS\\Parsers\\DefaultContentParser"
             }
         },
         "content": {
