@@ -1,6 +1,6 @@
 <?php
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setUsingCache(false)
     ->setRiskyAllowed(false)
     ->setRules([
@@ -10,6 +10,6 @@ return PhpCsFixer\Config::create()
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->in(__DIR__)
-            ->append([__DIR__.'.php_sc.dist'])
+            ->append([__DIR__.'.php-cs-fixer.dist.php'])
     )
 ;
