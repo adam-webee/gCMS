@@ -91,7 +91,6 @@ describe(
             }
         );
 
-
         it(
             'can correctly verify if path is a git repository',
             function () {
